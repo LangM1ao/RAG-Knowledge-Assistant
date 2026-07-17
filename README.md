@@ -1,13 +1,13 @@
-# RAG Knowledge Base Assistant｜README v4
+# RAG Knowledge Base Assistant
 
 面向企业知识库场景的轻量级、可演示 RAG 智能问答系统。
 
 
-## 1. 项目背景
+## 项目背景
 
 企业内部通常有制度、FAQ、产品和流程文档。普通大模型不了解这些私有资料，也可能在没有依据时生成看似合理但错误的回答。本项目先检索知识库，再让大模型根据检索结果回答，并向用户展示引用来源。
 
-## 2. 当前能力
+## 功能特性
 
 - TXT / PDF 上传、解析、chunk 切分和向量入库
 - OpenAI Embedding 与 ChromaDB cosine 检索
@@ -21,7 +21,7 @@
 - 独立 eval Chroma 库，不污染演示知识库
 - `.env` 配置、基础异常处理、logging 和自动化测试
 
-## 3. 技术栈
+## 技术栈
 
 - Python 3.13
 - FastAPI / Uvicorn
@@ -31,7 +31,7 @@
 - OpenAI Embedding API / Chat API
 - pypdf / python-dotenv / pytest
 
-## 4. 系统架构
+## 系统架构
 
 ```text
 用户
@@ -52,7 +52,7 @@ FastAPI 后端（接口与业务调度）
 
 Streamlit 不直接操作 ChromaDB、SQLite 或 OpenAI。RAG 与数据访问逻辑保留在 FastAPI 后端。
 
-## 5. RAG 流程
+## RAG 流程
 
 ### 文档入库
 
@@ -68,7 +68,7 @@ question → query embedding → ChromaDB top-k 检索
 → context → LLM → answer + sources → SQLite history
 ```
 
-## 6. 项目结构
+## 项目结构
 
 ```text
 rag_knowledge_assistant/
@@ -133,7 +133,7 @@ rag_knowledge_assistant/
   README.md
 ```
 
-## 7. API
+## API
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -147,7 +147,7 @@ rag_knowledge_assistant/
 | POST | `/chat/query` | RAG 问答并保存历史 |
 | GET | `/chat/history?limit=10` | 最近问答历史 |
 
-## 8. 本地运行
+## 本地运行
 
 ### 创建环境并安装依赖
 
@@ -202,7 +202,7 @@ docker compose down
 
 不要随意使用 `docker compose down -v`，`-v` 会同时删除 `rag-knowledge-assistant-data` 数据卷。
 
-## 9. 使用流程
+## 使用流程
 
 1. 确认页面显示“后端连接正常”。
 2. 上传 TXT 或 PDF。
@@ -212,11 +212,11 @@ docker compose down
 6. 用文档外问题验证无依据提示。
 7. 在问答历史中查看 SQLite 持久化记录。
 
-## 10. 演示文档与固定问题
+## 演示文档与示例问题
 
 演示文件：`demo/demo_knowledge_base.txt`
 
-建议按顺序提问：
+可使用以下问题验证检索、引用和拒答行为：
 
 1. 文档内直接问题：员工每周最多可以远程办公几天？
 2. 跨主题问题：差旅报销和学习预算分别有哪些时间或金额限制？
@@ -224,7 +224,7 @@ docker compose down
 4. 幻觉测试：请确认员工都可以报销商务舱费用。
 5. 引用测试：发生设备遗失时应该怎么做？请给出依据。
 
-## 11. 示例返回
+## 示例返回
 
 ```json
 {
@@ -243,7 +243,7 @@ docker compose down
 
 距离越小通常表示在当前 cosine distance 定义下越接近。不同指标的 score/distance 方向可能不同，不能脱离配置解释。
 
-## 12. 无依据拒答
+## 无依据拒答
 
 当没有返回可靠 sources 时，Streamlit 明确显示：
 
@@ -251,19 +251,19 @@ docker compose down
 知识库中未找到可靠依据。
 ```
 
-当前版本仍主要依赖检索结果和 prompt 约束，Week11 会继续完善阈值、评估集和拒答准确性。
+拒答行为由检索结果、相似度阈值和 prompt 约束共同控制，相关效果通过固定评估集进行验证。
 
-## 13. 问答历史
+## 问答历史
 
 每次成功问答后，后端将 question、answer、sources 和 created_at 写入 SQLite `chat_history`。前端通过 `/chat/history` 获取最近十条，而不是只保存在浏览器 session。
 
-## 14. 项目截图
+## 项目截图
 
-![Week10 Streamlit frontend](docs/screenshots/week10-streamlit-home.png)
+![Streamlit frontend](docs/screenshots/week10-streamlit-home.png)
 
-![Week12 Docker Compose runtime](docs/screenshots/week12-docker-home.png)
+![Docker Compose runtime](docs/screenshots/week12-docker-home.png)
 
-## 15. 测试
+## 测试
 
 ```powershell
 python -m pytest -q -p no:cacheprovider
@@ -271,18 +271,9 @@ python -m pytest -q -p no:cacheprovider
 
 `tests/test_api.http` 用于 IDE 手动接口测试，不由 pytest 收集。`examples/manual_vector_store_demo.py` 是需要真实 API Key 的手动演示，不属于自动化测试。
 
-## 16. 两分钟演示流程
+## 检索评估与优化
 
-1. 介绍架构：Streamlit → FastAPI → SQLite / ChromaDB / LLM。
-2. 展示后端健康状态。
-3. 上传演示文档并观察 indexed 与 chunk_count。
-4. 提问一个文档内问题，展开引用片段。
-5. 提问一个文档外问题，展示无依据处理。
-6. 展示 SQLite 问答历史。
-
-## 17. Week11 检索评估与优化
-
-Week11 的实验数据与 collection 只写入 `data/eval_chroma_db/`。当前演示库 `data/chroma_db/` 不参与参数实验。
+评估实验数据与 collection 只写入 `data/eval_chroma_db/`，运行时知识库 `data/chroma_db/` 不参与参数实验。
 
 ### 固定问题集
 
@@ -341,9 +332,9 @@ cd path\to\rag_knowledge_assistant
 
 也可以传入 `document_ids`。不传过滤字段时仍然全库检索。metadata filter 是范围约束，不等于权限系统。
 
-### keyword、BM25、vector 与 rerank
+### Keyword、BM25、Vector 与 Rerank
 
-- 当前 `keyword_retriever.py` 是透明的字面匹配教学基线，不是 BM25。
+- `keyword_retriever.py` 是透明的字面匹配基线，不是 BM25。
 - BM25 进一步考虑词频、逆文档频率和文档长度，适合精确术语与编号。
 - vector search 更擅长语义改写和近义表达。
 - hybrid search 可以合并 keyword/BM25 与 vector 的候选。
@@ -351,7 +342,7 @@ cd path\to\rag_knowledge_assistant
 
 本项目尚未实现正式 BM25、hybrid fusion 或外部 reranker，不把设计说明写成已部署能力。
 
-## 18. 当前局限
+## 已知限制
 
 - 只支持 TXT 和基础 PDF 文本解析，不支持复杂表格与版面理解。
 - 上传和 embedding 是同步流程，大文件会阻塞请求。
@@ -362,19 +353,11 @@ cd path\to\rag_knowledge_assistant
 - 依赖外部 Embedding 与 LLM API，受网络、配额和费用影响。
 - Streamlit 适合快速演示，不等同于复杂生产前端。
 
-## 19. Week12 容器化交付（已完成）
+## Docker 容器化
 
 - 后端与前端分别使用 Dockerfile 构建，Compose 统一编排。
 - 本地默认 API 地址保持不变；容器通过 `API_BASE_URL=http://backend:8000` 通信。
 - backend 和 frontend 都配置了真实 HTTP 健康检查。
 - 使用 `rag-knowledge-assistant-data` 命名卷持久化 SQLite、ChromaDB 与上传文件。
-- 已实测镜像构建、双服务 healthy、宿主机 HTTP、容器间通信、后端重启和浏览器页面渲染。
-- 完整记录见 `docs/final_acceptance.md`，架构说明见 `docs/architecture.md`。
-
-## 20. 简历表述（Week12 完成版）
-
-基于 FastAPI、Streamlit、ChromaDB、SQLite、Embedding 模型与大模型 API 构建企业知识库 RAG 智能问答系统，实现文档入库、语义检索、来源引用、拒答、多文档管理与问答历史；构建 20 题固定评估集，对 chunk、top-k、cosine threshold 和 metadata filtering 进行隔离评估；使用 Docker Compose 容器化前后端，完成容器 DNS、环境变量、健康检查、持久卷及重启验收。
-
-## 21. 两分钟项目讲解
-
-这个项目面向企业知识库问答场景。用户上传 TXT/PDF 后，FastAPI 完成解析、chunk、embedding 和 ChromaDB 入库，Streamlit 通过 API 提供文档管理、问答、引用和历史展示。Week11 我建立了 20 题固定评估集，把检索和生成分开分析，并通过独立 eval Chroma 库比较 chunk、top-k 和 cosine threshold；在当前数据上选择 top_k=3 与 threshold=0.60。Week12 我把前后端分别制作成镜像，通过 Compose 服务名解决容器通信，加入双健康检查和持久卷，并真实验证宿主机访问、容器间连接、重启持久性和浏览器渲染。这个项目不是完整企业平台，但已经是有测试、有评估证据、有容器化交付和明确边界的可复现 RAG 工程项目。
+- 镜像构建、双服务健康检查、宿主机 HTTP、容器间通信、后端重启和浏览器页面渲染均已验证。
+- 架构说明见 `docs/architecture.md`。
