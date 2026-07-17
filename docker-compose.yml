@@ -1,0 +1,58 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
+      LLM_MODEL: ${LLM_MODEL:-gpt-5.5}
+      UPLOAD_DIR: data/uploads
+      CHROMA_DB_DIR: data/chroma_db
+      METADATA_DB_PATH: data/metadata.db
+      CHUNK_SIZE: ${CHUNK_SIZE:-500}
+      CHUNK_OVERLAP: ${CHUNK_OVERLAP:-50}
+      TOP_K: ${TOP_K:-3}
+      SIMILARITY_THRESHOLD: ${SIMILARITY_THRESHOLD:-0.6}
+    ports:
+      - "8000:8000"
+    volumes:
+      - rag_data:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 15s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      API_BASE_URL: http://backend:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3)"
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  rag_data:
+    name: rag-knowledge-assistant-data

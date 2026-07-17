@@ -1,0 +1,55 @@
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.streamlit/secrets.toml.*
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+logs/
+log/
+*.log
+*.tmp
+*.temp
+~$*
+
+# Runtime uploads and persistent databases
+data/uploads/*
+!data/uploads/.gitkeep
+data/chroma_db/*
+!data/chroma_db/.gitkeep
+data/eval_chroma_db/*
+!data/eval_chroma_db/.gitkeep
+data/*.db
+data/*.db-*
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+
+# Docker runtime and local persistent-volume directories
+.docker-data/
+docker-data/
+volumes/
+data/docker/

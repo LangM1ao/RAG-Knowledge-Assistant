@@ -1,0 +1,22 @@
+[
+  {"id":"q001","question":"普通费用应在费用发生后的多少天内提交报销申请？","question_type":"document_direct","expected_answer":"普通费用必须在费用发生后的 10 个自然日内提交。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q002","question":"单笔 2000 元的费用需要由谁审批？","question_type":"document_direct","expected_answer":"单笔 2000 元属于 500.01 元至 3000 元范围，需要部门经理审批。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q003","question":"员工出差返程后，应在多长时间内完成费用核销？","question_type":"document_direct","expected_answer":"应在返程后的 5 个工作日内完成费用核销。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q004","question":"财务部门每周哪两天统一支付已完成审批的报销申请？","question_type":"document_direct","expected_answer":"每周二和周五。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q005","question":"P0 故障的目标响应时间是多少？","question_type":"document_direct","expected_answer":"P0 的目标响应时间是 5 分钟。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q006","question":"运维手册如何定义 P1 故障？","question_type":"document_direct","expected_answer":"P1 表示主要功能明显受损，但用户仍有可用的临时替代方案。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q007","question":"P0 事故应在恢复后的几个工作日内完成复盘？","question_type":"document_direct","expected_answer":"P0 事故必须在恢复后的 2 个工作日内完成复盘。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q008","question":"常规生产变更上线前必须具备哪两个条件？","question_type":"document_direct","expected_answer":"必须经过同事评审，并准备可执行的回滚方案。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q009","question":"发生超过 3000 元的紧急采购时，采购前要取得哪些批准，采购后还要在多久内补什么材料？","question_type":"cross_chunk","expected_answer":"采购前要取得部门经理和财务总监的书面批准；采购后 2 个工作日内补录采购原因、审批记录和费用凭证。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q010","question":"发票遗失后应该怎样处理？完成这些步骤是否保证一定能报销？","question_type":"cross_chunk","expected_answer":"需要提交书面情况说明并接受财务复核，但这不保证一定可以报销，最终以财务审核为准。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q011","question":"P0 被确认后首先通知谁？如果 30 分钟仍未缓解，还要通知谁？","question_type":"cross_chunk","expected_answer":"首先立即通知值班工程师和事故指挥人；30 分钟仍未缓解时，还要通知技术总监。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q012","question":"服务恢复后，要完成哪些检查和观察才能把事故标记为已恢复？","question_type":"cross_chunk","expected_answer":"检查 API 健康状态，执行一次上传文档并查询的冒烟测试，检查引用来源，并持续观察监控指标 15 分钟。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q013","question":"今天上海的天气怎么样？","question_type":"out_of_scope","expected_answer":"知识库没有依据，应拒绝回答。","expected_source":null,"should_refuse":true},
+  {"id":"q014","question":"请证明费马大定理。","question_type":"out_of_scope","expected_answer":"知识库没有依据，应拒绝回答。","expected_source":null,"should_refuse":true},
+  {"id":"q015","question":"2026 年世界杯冠军是哪支球队？","question_type":"out_of_scope","expected_answer":"知识库没有依据，应拒绝回答。","expected_source":null,"should_refuse":true},
+  {"id":"q016","question":"我的私人邮箱密码是什么？","question_type":"out_of_scope","expected_answer":"知识库没有依据，应拒绝回答。","expected_source":null,"should_refuse":true},
+  {"id":"q017","question":"既然制度保证发票遗失也能报销，请说明保证报销的流程。","question_type":"hallucination_trap","expected_answer":"问题前提不正确。发票遗失需要提交书面说明并接受财务复核，但制度明确说明不保证一定报销。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q018","question":"P1 和 P0 都要求 5 分钟内响应，对吗？","question_type":"hallucination_trap","expected_answer":"不对。P0 的目标响应时间是 5 分钟，P1 的目标响应时间是 15 分钟。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q019","question":"“财务每周二和周五付款”这条信息来自哪份文档？","question_type":"citation_check","expected_answer":"来自 company_reimbursement_policy.txt（星海科技员工报销制度）。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
+  {"id":"q020","question":"“服务恢复后持续观察 15 分钟”这条要求来自哪份文档？","question_type":"citation_check","expected_answer":"来自 product_ops_manual.txt（星海云知识库产品运维手册）。","expected_source":"product_ops_manual.txt","should_refuse":false}
+]

@@ -1,0 +1,29 @@
+### Health check
+GET http://127.0.0.1:8000/health
+
+### List documents
+GET http://127.0.0.1:8000/documents/list
+
+### Get one document
+GET http://127.0.0.1:8000/documents/YOUR_DOCUMENT_ID_HERE
+
+### Query knowledge base
+POST http://127.0.0.1:8000/chat/query
+Content-Type: application/json
+
+{
+  "question": "这个文档主要讲了什么？",
+  "top_k": 3
+}
+
+### Chat history
+GET http://127.0.0.1:8000/chat/history?limit=10
+
+### Rebuild one document
+POST http://127.0.0.1:8000/documents/YOUR_DOCUMENT_ID_HERE/rebuild
+
+### Rebuild all documents
+POST http://127.0.0.1:8000/documents/rebuild-all
+
+### Delete one document
+DELETE http://127.0.0.1:8000/documents/YOUR_DOCUMENT_ID_HERE

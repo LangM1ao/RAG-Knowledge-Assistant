@@ -1,0 +1,5 @@
+question,question_style,top_source,top_keyword_score,observation
+P0 的目标响应时间是几分钟？,精确术语,product_ops_manual.txt,8.24,P0 与响应时间直接重合，关键词匹配信号强
+严重故障多久要有人确认？,语义改写,product_ops_manual.txt,2.05,仍命中正确文档但分数明显降低，显示字面方法对同义改写更脆弱
+财务每周哪两天付款？,精确业务词,company_reimbursement_policy.txt,3.08,财务与付款词直接命中报销制度
+发票丢了还能保证报销吗？,口语改写,company_reimbursement_policy.txt,2.06,命中正确文档但丢了与遗失并非完全相同词形
