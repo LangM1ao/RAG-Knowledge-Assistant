@@ -1,5 +1,6 @@
 from app.core.logging_config import get_logger
 from app.services.llm_client import generate_answer
+from app.services.retriever import Retriever
 from app.services.vector_store import VectorStore
 
 
@@ -25,6 +26,7 @@ def build_context(chunks: list[dict]) -> str:
 
 def answer_question(
     question: str,
+    retrieval_mode: str = "vector",
     top_k: int = 3,
     similarity_threshold: float | None = None,
     document_ids: list[str] | None = None,
@@ -50,7 +52,10 @@ def answer_question(
     if source_files:
         query_kwargs["source_files"] = source_files
 
-    chunks = store.query(**query_kwargs)
+    chunks = Retriever(vector_store=store).query(
+        retrieval_mode=retrieval_mode,
+        **query_kwargs,
+    )
 
     # 记录检索到了多少个 chunk
     logger.info(
@@ -104,7 +109,15 @@ def answer_question(
         {
             "chunk_id": chunk.get("chunk_id"),
             "source_file": (chunk.get("metadata") or {}).get("source_file"),
+            "document_id": (chunk.get("metadata") or {}).get("document_id"),
             "distance": chunk.get("distance"),
+            "retrieval_source": chunk.get("retrieval_source"),
+            "rank": chunk.get("rank"),
+            "vector_score": chunk.get("vector_score"),
+            "vector_rank": chunk.get("vector_rank"),
+            "bm25_score": chunk.get("bm25_score"),
+            "bm25_rank": chunk.get("bm25_rank"),
+            "rrf_score": chunk.get("rrf_score"),
             "chunk_preview": chunk.get("text", "")[:240],
         }
         for chunk in chunks
@@ -113,4 +126,6 @@ def answer_question(
     return {
         "answer": answer,
         "sources": sources,
+        "retrieval_mode": retrieval_mode,
+        "retrieval_debug": sources,
     }

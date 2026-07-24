@@ -144,6 +144,21 @@ def test_query_adds_only_selected_week11_controls():
     }
 
 
+def test_query_sends_retrieval_mode():
+    captured = {}
+
+    def fake_post(url: str, json: dict, timeout: float):
+        captured.update(json)
+        return FakeResponse(200, {"answer": "Answer", "sources": []})
+
+    ApiClient(post=fake_post).query(
+        "policy",
+        retrieval_mode="hybrid",
+    )
+
+    assert captured["retrieval_mode"] == "hybrid"
+
+
 def test_api_error_uses_backend_detail():
     def fake_get(url: str, timeout: float):
         return FakeResponse(400, {"detail": "Bad request"})

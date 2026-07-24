@@ -8,7 +8,8 @@
   -> API_BASE_URL=http://backend:8000
   -> FastAPI backend 容器 :8000
      -> SQLite：文档 metadata 与问答历史
-     -> ChromaDB：chunk embedding 与相似度检索
+     -> ChromaDB：chunk 文本、metadata、embedding 与向量检索
+     -> BM25：从 ChromaDB 恢复 chunk，构建轻量内存稀疏索引
      -> OpenAI API：embedding 与答案生成
 ```
 
@@ -23,8 +24,31 @@ Docker Compose 使用 `rag-knowledge-assistant-data` 命名卷挂载到后端的
 5. 每个 chunk 调用 embedding 模型得到向量。
 6. `vector_store.py` 把向量、chunk 文本、`document_id` 和 `source_file` 写入 ChromaDB。
 7. SQLite 更新文档状态为 `indexed`，记录 chunk_count；前端刷新文档列表。
-8. 用户提问时，问题先 embedding，再在 ChromaDB 做 top-k cosine 检索；符合阈值的 chunk 组成 context。
-9. LLM 只能基于 context 生成答案；响应返回 answer 与 sources，并把问答历史写入 SQLite。
+8. 用户选择 Vector、BM25 或 Hybrid。Vector 使用 query embedding；BM25 使用 token 统计；Hybrid 用 RRF 融合两路排名。
+9. 统一 Retriever 返回相同 chunk 结构，符合规则的 chunk 组成 context。
+10. LLM 只能基于 context 生成答案；响应返回 answer、sources 和可选检索调试信息，并把问答历史写入 SQLite。
+
+## Hybrid Retrieval
+
+```text
+Document Upload
+   ├─ Parse
+   ├─ Chunk
+   ├─ Embedding → ChromaDB
+   └─ Chunk Text + Metadata → ChromaDB（BM25 的唯一恢复来源）
+
+User Query
+   ├─ Vector Retrieval ─┐
+   └─ BM25 Retrieval ───┤
+                        ↓
+                    RRF Fusion
+                        ↓
+                  Final Top-K Context
+                        ↓
+                    LLM Answer
+```
+
+BM25 每次查询读取当前 Chroma collection，并在内存重建索引。知识库变化后无需维护第二份持久化索引，因此上传、删除、单文档 rebuild、rebuild-all 和容器重启都不会造成两套 chunk 数据不一致。代价是查询前有 O(N) 的建索引开销，只适合当前小规模项目。
 
 ## 本地与 Docker 的区别
 

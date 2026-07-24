@@ -1,6 +1,7 @@
 import csv
 
 from evals.retrieval_evaluator import (
+    reciprocal_rank,
     CSV_FIELDS,
     detect_refusal,
     score_record,
@@ -8,6 +9,12 @@ from evals.retrieval_evaluator import (
     summarize_records,
     write_results_csv,
 )
+
+
+def test_reciprocal_rank_uses_first_matching_source():
+    assert reciprocal_rank("policy.txt", ["other.txt", "policy.txt"]) == 0.5
+    assert reciprocal_rank("policy.txt", ["other.txt"]) == 0.0
+    assert reciprocal_rank(None, ["other.txt"]) is None
 
 
 def test_source_hit_normalizes_paths_and_skips_out_of_scope():

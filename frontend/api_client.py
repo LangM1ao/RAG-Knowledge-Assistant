@@ -163,11 +163,14 @@ class ApiClient:
         self,
         question: str,
         top_k: int = 3,
+        retrieval_mode: str | None = None,
         similarity_threshold: float | None = None,
         document_ids: list[str] | None = None,
         source_files: list[str] | None = None,
     ) -> dict:
         payload = {"question": question, "top_k": top_k}
+        if retrieval_mode is not None:
+            payload["retrieval_mode"] = retrieval_mode
         if similarity_threshold is not None:
             payload["similarity_threshold"] = similarity_threshold
         if document_ids:

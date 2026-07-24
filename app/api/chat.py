@@ -15,6 +15,7 @@ def query_knowledge_base(request: ChatQueryRequest):
     try:
         result = answer_question(
             question=request.question,
+            retrieval_mode=request.retrieval_mode,
             top_k=request.top_k,
             similarity_threshold=request.similarity_threshold,
             document_ids=request.document_ids,
@@ -33,6 +34,14 @@ def query_knowledge_base(request: ChatQueryRequest):
         "question": request.question,
         "answer": result["answer"],
         "sources": result["sources"],
+        "retrieval_mode": result.get(
+            "retrieval_mode",
+            request.retrieval_mode,
+        ),
+        "retrieval_debug": result.get(
+            "retrieval_debug",
+            result["sources"],
+        ),
     }
 
 

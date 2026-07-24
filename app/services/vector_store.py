@@ -15,9 +15,6 @@ from app.services.chunker import TextChunk
 
 logger = get_logger(__name__)
 
-client = OpenAI(api_key=OPENAI_API_KEY)
-
-
 def _metadata_condition(field: str, values: list[str] | None) -> dict | None:
     cleaned = list(dict.fromkeys(value for value in (values or []) if value))
     if not cleaned:
@@ -50,6 +47,7 @@ def embed_text(text: str) -> list[float]:
     if not OPENAI_API_KEY:
         raise ValueError("OPENAI_API_KEY is not configured.")
 
+    client = OpenAI(api_key=OPENAI_API_KEY)
     response = client.embeddings.create(
         model=EMBEDDING_MODEL,
         input=text,

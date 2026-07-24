@@ -14,8 +14,12 @@ services:
       CHUNK_OVERLAP: ${CHUNK_OVERLAP:-50}
       TOP_K: ${TOP_K:-3}
       SIMILARITY_THRESHOLD: ${SIMILARITY_THRESHOLD:-0.6}
+      DEFAULT_RETRIEVAL_MODE: ${DEFAULT_RETRIEVAL_MODE:-vector}
+      VECTOR_CANDIDATE_K: ${VECTOR_CANDIDATE_K:-8}
+      BM25_CANDIDATE_K: ${BM25_CANDIDATE_K:-8}
+      RRF_K: ${RRF_K:-60}
     ports:
-      - "8000:8000"
+      - "127.0.0.1:${BACKEND_PORT:-8000}:8000"
     volumes:
       - rag_data:/app/data
     healthcheck:
@@ -37,7 +41,7 @@ services:
     environment:
       API_BASE_URL: http://backend:8000
     ports:
-      - "8501:8501"
+      - "127.0.0.1:${FRONTEND_PORT:-8501}:8501"
     depends_on:
       backend:
         condition: service_healthy
@@ -55,4 +59,4 @@ services:
 
 volumes:
   rag_data:
-    name: rag-knowledge-assistant-data
+    name: ${DATA_VOLUME_NAME:-rag-knowledge-assistant-data}

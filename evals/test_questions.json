@@ -18,5 +18,11 @@
   {"id":"q017","question":"既然制度保证发票遗失也能报销，请说明保证报销的流程。","question_type":"hallucination_trap","expected_answer":"问题前提不正确。发票遗失需要提交书面说明并接受财务复核，但制度明确说明不保证一定报销。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
   {"id":"q018","question":"P1 和 P0 都要求 5 分钟内响应，对吗？","question_type":"hallucination_trap","expected_answer":"不对。P0 的目标响应时间是 5 分钟，P1 的目标响应时间是 15 分钟。","expected_source":"product_ops_manual.txt","should_refuse":false},
   {"id":"q019","question":"“财务每周二和周五付款”这条信息来自哪份文档？","question_type":"citation_check","expected_answer":"来自 company_reimbursement_policy.txt（星海科技员工报销制度）。","expected_source":"company_reimbursement_policy.txt","should_refuse":false},
-  {"id":"q020","question":"“服务恢复后持续观察 15 分钟”这条要求来自哪份文档？","question_type":"citation_check","expected_answer":"来自 product_ops_manual.txt（星海云知识库产品运维手册）。","expected_source":"product_ops_manual.txt","should_refuse":false}
+  {"id":"q020","question":"“服务恢复后持续观察 15 分钟”这条要求来自哪份文档？","question_type":"citation_check","expected_answer":"来自 product_ops_manual.txt（星海云知识库产品运维手册）。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q021","question":"ERR_CONNECTION_104 应该怎样排查？","question_type":"exact_keyword","expected_answer":"先检查 ChromaDB 数据目录权限，再检查磁盘剩余空间。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q022","question":"API_TIMEOUT_MS 的默认值是多少，在哪里设置？","question_type":"exact_keyword","expected_answer":"默认值为 60000，通过前端服务的环境变量设置。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q023","question":"哪个函数会重新解析文档并替换旧向量？","question_type":"entity","expected_answer":"rebuild_document_by_id。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q024","question":"OPS-2026-017 对调整生产检索参数有什么要求？","question_type":"exact_keyword","expected_answer":"必须保存评估结果并准备回滚值。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q025","question":"如果知识库后端连不上向量库，需要从哪些系统条件开始检查？","question_type":"semantic","expected_answer":"检查 ChromaDB 数据目录权限和磁盘剩余空间。","expected_source":"product_ops_manual.txt","should_refuse":false},
+  {"id":"q026","question":"调整检索参数时既要留下效果证据又要能恢复，应该怎么做？","question_type":"mixed","expected_answer":"保存评估结果并准备回滚值。","expected_source":"product_ops_manual.txt","should_refuse":false}
 ]

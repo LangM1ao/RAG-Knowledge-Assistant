@@ -101,6 +101,13 @@ question = st.text_area(
 )
 top_k = st.slider("Top-K 检索数量", min_value=1, max_value=10, value=3)
 show_chunks = st.toggle("显示检索片段", value=True)
+retrieval_mode_label = st.radio(
+    "检索模式",
+    options=["Vector", "BM25", "Hybrid"],
+    horizontal=True,
+    help="Vector 适合语义改写，BM25 适合错误码和配置名，Hybrid 使用 RRF 融合两路排名。",
+)
+retrieval_mode = retrieval_mode_label.casefold()
 
 document_options = {
     f"{document.get('filename', 'unknown')}｜{document.get('document_id', '')}": document.get("document_id")
@@ -138,6 +145,7 @@ if st.button("提交问题", type="primary"):
                 result = client.query(
                     question.strip(),
                     top_k=top_k,
+                    retrieval_mode=retrieval_mode,
                     similarity_threshold=(similarity_threshold if use_threshold else None),
                     document_ids=(selected_document_ids or None),
                 )
@@ -150,6 +158,7 @@ result = st.session_state.get("last_answer")
 if result:
     st.markdown("### 回答")
     st.write(result.get("answer", ""))
+    st.caption(f"检索模式：{result.get('retrieval_mode', retrieval_mode)}")
     st.caption(f"响应时间：{result.get('elapsed_seconds', 0):.2f} 秒")
 
     sources = result.get("sources") or []
@@ -166,6 +175,17 @@ if result:
                 st.write(f"chunk_id：{source.get('chunk_id', 'unknown')}")
                 if show_chunks:
                     st.write(source.get("chunk_preview") or "没有可显示的片段预览。")
+                    st.json(
+                        {
+                            "retrieval_source": source.get("retrieval_source"),
+                            "rank": source.get("rank"),
+                            "vector_score": source.get("vector_score"),
+                            "vector_rank": source.get("vector_rank"),
+                            "bm25_score": source.get("bm25_score"),
+                            "bm25_rank": source.get("bm25_rank"),
+                            "rrf_score": source.get("rrf_score"),
+                        }
+                    )
 
 st.divider()
 st.subheader("问答历史")

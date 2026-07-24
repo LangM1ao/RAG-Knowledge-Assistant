@@ -11,6 +11,7 @@ from app.services import rag_pipeline
 def test_chat_query_request_keeps_old_payload_compatible():
     request = ChatQueryRequest(question="What is RAG?", top_k=3)
 
+    assert request.retrieval_mode == "vector"
     assert request.similarity_threshold is None
     assert request.document_ids is None
     assert request.source_files is None
@@ -30,6 +31,8 @@ def test_chat_query_request_accepts_filters_and_validates_bounds():
         ChatQueryRequest(question="bad", top_k=0)
     with pytest.raises(ValidationError):
         ChatQueryRequest(question="bad", similarity_threshold=-0.1)
+    with pytest.raises(ValidationError):
+        ChatQueryRequest(question="bad", retrieval_mode="unknown")
 
 
 def test_chat_route_forwards_retrieval_controls(monkeypatch):
@@ -50,6 +53,7 @@ def test_chat_route_forwards_retrieval_controls(monkeypatch):
             "similarity_threshold": 0.35,
             "document_ids": ["doc-1"],
             "source_files": ["policy.txt"],
+            "retrieval_mode": "hybrid",
         },
     )
 
@@ -60,7 +64,31 @@ def test_chat_route_forwards_retrieval_controls(monkeypatch):
         "similarity_threshold": 0.35,
         "document_ids": ["doc-1"],
         "source_files": ["policy.txt"],
+        "retrieval_mode": "hybrid",
     }
+
+
+def test_chat_route_returns_mode_and_retrieval_debug(monkeypatch):
+    monkeypatch.setattr(
+        chat,
+        "answer_question",
+        lambda **kwargs: {
+            "answer": "ok",
+            "sources": [{"chunk_id": "chunk-1"}],
+            "retrieval_mode": "bm25",
+            "retrieval_debug": [{"chunk_id": "chunk-1", "bm25_score": 2.5}],
+        },
+    )
+    monkeypatch.setattr(chat, "create_chat_record", lambda **kwargs: None)
+
+    response = TestClient(app).post(
+        "/chat/query",
+        json={"question": "error code", "retrieval_mode": "bm25"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["retrieval_mode"] == "bm25"
+    assert response.json()["retrieval_debug"][0]["bm25_score"] == 2.5
 
 
 def test_threshold_empty_result_refuses_without_calling_llm(monkeypatch):

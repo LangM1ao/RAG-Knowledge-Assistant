@@ -53,6 +53,19 @@ def source_hit(
     return expected in actual
 
 
+def reciprocal_rank(
+    expected_source: str | None,
+    retrieved_sources: Iterable[str],
+) -> float | None:
+    if expected_source is None:
+        return None
+    expected = _source_name(expected_source).casefold()
+    for rank, source in enumerate(retrieved_sources, start=1):
+        if _source_name(source).casefold() == expected:
+            return 1 / rank
+    return 0.0
+
+
 def detect_refusal(answer: str, retrieved_sources: Iterable[str]) -> bool:
     sources = list(retrieved_sources)
     if not sources:
