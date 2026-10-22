@@ -13,7 +13,7 @@ from app.services import llm_client, rag_pipeline
 @pytest.fixture
 def scenario(monkeypatch):
     state = {
-        "answer": "员工报销需要经过部门经理审批。",
+        "answer": "员工报销需要经过部门经理审批。[1]",
         "payload": {"verdict": "PASS", "reason": "审批人得到资料支持"},
         "chunks": [{
             "chunk_id": "chunk-1",
@@ -61,7 +61,7 @@ def scenario(monkeypatch):
 
 def test_supported_answer_passes_with_same_context_and_sources(scenario):
     result = rag_pipeline.answer_question("员工报销需要谁审批？")
-    assert result["answer"] == "员工报销需要经过部门经理审批。"
+    assert result["answer"] == "员工报销需要经过部门经理审批。[1]"
     assert result.get("verification", {}).get("status") == "PASS"
     assert result["sources"][0]["source_file"] == "policy.txt"
     assert result["sources"][0]["chunk_preview"] == "员工报销需要经过部门经理审批。"
@@ -167,9 +167,9 @@ def test_empty_generated_answer_is_not_returned_as_success(scenario, answer):
 
 def test_disabled_verification_keeps_original_flow(scenario, monkeypatch):
     monkeypatch.setattr(rag_pipeline, "ANSWER_VERIFICATION_ENABLED", False)
-    scenario["answer"] = "原有回答"
+    scenario["answer"] = "原有回答[1]"
     result = rag_pipeline.answer_question("谁审批？")
-    assert result["answer"] == "原有回答"
+    assert result["answer"] == "原有回答[1]"
     assert result["sources"][0]["source_file"] == "policy.txt"
     assert scenario["verification_calls"] == []
 

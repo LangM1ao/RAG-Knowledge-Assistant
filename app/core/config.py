@@ -29,3 +29,8 @@ RRF_K = int(os.getenv("RRF_K", "60"))
 ANSWER_VERIFICATION_ENABLED = os.getenv("ANSWER_VERIFICATION_ENABLED", "true").strip().lower() in {
     "true", "1", "yes", "on"
 }
+
+# 仅受信任开发环境开启；还需要请求 debug=true。
+RETRIEVAL_DEBUG_ENABLED = os.getenv("RETRIEVAL_DEBUG_ENABLED", "false").strip().lower() in {"true", "1", "yes", "on"}
+CONTEXT_MAX_CHARS = max(500, int(os.getenv("CONTEXT_MAX_CHARS", "6000")))
+CONTEXT_MAX_CHUNKS = max(1, int(os.getenv("CONTEXT_MAX_CHUNKS", "6")))

@@ -86,7 +86,7 @@ question → Retriever
 
 生成答案后，第二次调用同一个配置的 LLM，检查答案是否得到**生成时同一份 context** 支持。资料相关不代表答案有依据，例如资料只说明“经理审批”，不能支持“报销上限 5000 元”。检索算法、距离阈值和 RRF 排序保持原样。
 
-- `PASS`：返回原答案，保留原有来源。
+- `PASS`：返回原答案，只保留实际引用编号对应的来源。
 - `FAIL`：替换为“根据当前知识库资料，无法确定该问题的答案。”，清空来源，不返回原答案。
 - API 失败、30 秒超时、模型拒绝校验、未知 verdict 或格式错误：返回“答案校验暂时不可用，请稍后重试。”，不把技术故障说成资料不足。
 - 检索无结果时直接沿用原拒答；生成结果是固定的纯拒答语时跳过校验。非固定措辞仍校验，避免一句拒答后夹带猜测绕过检查。
@@ -361,7 +361,7 @@ python -m pytest -q -p no:cacheprovider
 - answer accuracy：最终答案是否覆盖人工金标准关键点。
 - refusal accuracy：文档外问题是否拒答，同时文档内问题是否避免误拒答。
 
-### 真实结果摘要
+### 历史 Week11 真实结果摘要（20题，与本轮26题对比分开）
 
 baseline（500/50、top_k=3）：retrieval hit rate 1.00，20 题人工 answer accuracy 1.00，refusal accuracy 1.00。
 
@@ -419,16 +419,16 @@ cd path\to\rag_knowledge_assistant
 - hybrid search 可以合并 keyword/BM25 与 vector 的候选。
 - rerank 位于初召回之后，对候选重新排序。
 
-本项目尚未实现正式 BM25、hybrid fusion 或外部 reranker，不把设计说明写成已部署能力。
+本项目已实现 BM25、Hybrid/RRF；尚未接入外部 reranker。
 
 ## 已知限制
 
 - 只支持 TXT 和基础 PDF 文本解析，不支持复杂表格与版面理解。
 - 上传和 embedding 是同步流程，大文件会阻塞请求。
 - 没有登录、权限、多租户和审计系统。
-- 评估集只有 20 题和短 demo 文档，尚不是生产级评估体系。
+- 当前固定检索评估为26题和3份短合成demo，不是生产级评估体系。
 - answer accuracy 为单人逐题复核，没有多人标注一致性。
-- 尚未实现正式 BM25、hybrid search 或 rerank。
+- 已实现 BM25 与 Hybrid/RRF；未实现外部 rerank。
 - 依赖外部 Embedding 与 LLM API，受网络、配额和费用影响。
 - Streamlit 适合快速演示，不等同于复杂生产前端。
 
@@ -440,3 +440,19 @@ cd path\to\rag_knowledge_assistant
 - 使用 `rag-knowledge-assistant-data` 命名卷持久化 SQLite、ChromaDB 与上传文件。
 - 镜像构建、双服务健康检查、宿主机 HTTP、容器间通信、后端重启和浏览器页面渲染均已验证。
 - 架构说明见 `docs/architecture.md`。
+
+
+## Retrieval Quality Upgrade（2026-10-22）
+
+使用结构优先字符分块、真实页码/offset、SQLite显式文档别名和实体Embedding上下文。原文仍保存原样，别名只确认身份。新增同文档同章节的有界邻块、部分回答、实际引用筛选、可恢复索引重建。
+
+- [本次挑战与解决过程](docs/retrieval_upgrade_20261022.md)
+- [零基础教程](docs/retrieval_upgrade_tutorial.md) / [完整代码与逐行导读](docs/retrieval_upgrade_code_walkthrough.md)
+- [前后对比与验收](eval_results/retrieval_upgrade_comparison.md) / [历史记录保存审计](docs/change_history.md)
+- 别名：GET/PUT/DELETE /documents/{document_id}/aliases。PUT示例结构为entity_name和aliases；在前端保存标准实体后重建文档。
+- 分数：distance、vector_distance和兼容vector_score均为cosine distance；vector_similarity=1-distance，不是百分比。
+- 诊断默认关闭。受信任开发时须RETRIEVAL_DEBUG_ENABLED=true并请求debug=true；折叠面板不是权限控制。
+- 重建：先备份原文/元数据/完整Embedding，再准备并验证新索引，异常恢复原索引。启动恢复journal，恢复失败阻止启动。当前使用单API worker，不能称为跨SQLite/Chroma的原子事务。
+- 已上传的真实简历已重建。其他旧文档点“重建文档”升级，保持原始文件与document_id，不清空Chroma。
+
+学习笔记同步到 [Notion检索升级复盘](https://app.notion.com/p/4018cdeeb95a81e98719ef6fbc89a92c)。

@@ -65,10 +65,12 @@ def test_chat_route_forwards_retrieval_controls(monkeypatch):
         "document_ids": ["doc-1"],
         "source_files": ["policy.txt"],
         "retrieval_mode": "hybrid",
+        "debug": False,
     }
 
 
 def test_chat_route_returns_mode_and_retrieval_debug(monkeypatch):
+    monkeypatch.setattr(chat.config, "RETRIEVAL_DEBUG_ENABLED", True)
     monkeypatch.setattr(
         chat,
         "answer_question",
@@ -77,13 +79,14 @@ def test_chat_route_returns_mode_and_retrieval_debug(monkeypatch):
             "sources": [{"chunk_id": "chunk-1"}],
             "retrieval_mode": "bm25",
             "retrieval_debug": [{"chunk_id": "chunk-1", "bm25_score": 2.5}],
+            "debug_enabled": True,
         },
     )
     monkeypatch.setattr(chat, "create_chat_record", lambda **kwargs: None)
 
     response = TestClient(app).post(
         "/chat/query",
-        json={"question": "error code", "retrieval_mode": "bm25"},
+        json={"question": "error code", "retrieval_mode": "bm25", "debug": True},
     )
 
     assert response.status_code == 200

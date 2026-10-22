@@ -1,3 +1,5 @@
+> 本文为上次答案校验的历史验收快照；本轮已支持部分回答、实际引用及隐私诊断。当前行为与最新测试见retrieval_upgrade_20261022.md，历史75 passed不代表当前测试总数。
+
 # 答案依据校验：使用与验收
 
 本次在现有工程 `E:/RAG项目/rag-knowledge-assistant-bm25` 原地增加答案校验。原分支 `feature/bm25-hybrid-retrieval`，实现前最近提交 `296a25f`。没有新建项目、重置工作区、修改真实 `.env` 或推送 GitHub；原有未跟踪文件保持原样。

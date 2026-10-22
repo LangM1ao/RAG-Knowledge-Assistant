@@ -42,7 +42,7 @@ def test_answer_question_sources_include_chunk_preview(monkeypatch):
             ]
 
     monkeypatch.setattr(rag_pipeline, "VectorStore", FakeStore)
-    monkeypatch.setattr(rag_pipeline, "generate_answer", lambda messages: "Answer")
+    monkeypatch.setattr(rag_pipeline, "generate_answer", lambda messages: "Answer [1]")
     # 原测试仍检查来源；新增校验依赖用 Mock 隔离，避免访问真实 API。
     from app.services.answer_verifier import VerificationResult
     monkeypatch.setattr(

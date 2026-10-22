@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Europe/London",
+  "pytest": {
+    "passed": 133,
+    "warnings": 1,
+    "command": ".venv/Scripts/python.exe -m pytest -q -p no:cacheprovider"
+  },
+  "fixed_question_count": 26,
+  "retrieval_runs_per_stage": 78,
+  "synthetic_container_checks": 24,
+  "live_answer_samples_after": 5,
+  "docker_build_and_healthy": true,
+  "runtime_resume_reindexed": true,
+  "github_pushed": false,
+  "github_reason": "No configured remote",
+  "not_executed": [
+    "26-question complete answer accuracy",
+    "production latency benchmark",
+    "browser manual interaction",
+    "power-loss crash test"
+  ]
+}

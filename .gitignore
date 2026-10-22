@@ -53,3 +53,9 @@ data/*.db-*
 docker-data/
 volumes/
 data/docker/
+
+# Private recovery snapshots and local archives
+backups/
+data/index_backups/
+.venv_backup.zip
+git_history.bundle

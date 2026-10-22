@@ -12,3 +12,4 @@ class ChatQueryRequest(BaseModel):
     similarity_threshold: float | None = Field(default=None, ge=0, le=2)
     document_ids: list[str] | None = None
     source_files: list[str] | None = None
+    debug: bool = False

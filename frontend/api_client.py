@@ -25,6 +25,7 @@ class ApiClient:
         get: Callable = requests.get,
         post: Callable = requests.post,
         delete: Callable = requests.delete,
+        put: Callable = requests.put,
     ):
         resolved_base_url = base_url or os.getenv(
             "API_BASE_URL",
@@ -35,6 +36,7 @@ class ApiClient:
         self.get = get
         self.post = post
         self.delete = delete
+        self.put = put
 
     @staticmethod
     def _response_json(response) -> dict:
@@ -159,6 +161,25 @@ class ApiClient:
             self._raise_request_error(exc)
         return self._response_json(response)
 
+    def get_document_aliases(self, document_id: str) -> dict:
+        try:
+            response = self.get(
+                f"{self.base_url}/documents/{document_id}/aliases", timeout=self.timeout,
+            )
+        except requests.RequestException as exc:
+            self._raise_request_error(exc)
+        return self._response_json(response)
+
+    def update_document_aliases(self, document_id: str, entity_name: str, aliases: list[str]) -> dict:
+        try:
+            response = self.put(
+                f"{self.base_url}/documents/{document_id}/aliases",
+                json={"entity_name": entity_name, "aliases": aliases}, timeout=self.timeout,
+            )
+        except requests.RequestException as exc:
+            self._raise_request_error(exc)
+        return self._response_json(response)
+
     def query(
         self,
         question: str,
@@ -167,8 +188,11 @@ class ApiClient:
         similarity_threshold: float | None = None,
         document_ids: list[str] | None = None,
         source_files: list[str] | None = None,
+        debug: bool = False,
     ) -> dict:
         payload = {"question": question, "top_k": top_k}
+        if debug:
+            payload["debug"] = True
         if retrieval_mode is not None:
             payload["retrieval_mode"] = retrieval_mode
         if similarity_threshold is not None:

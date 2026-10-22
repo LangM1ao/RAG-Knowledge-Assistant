@@ -7,6 +7,7 @@ from typing import Any
 
 from app.core.logging_config import get_logger
 from app.services.vector_store import VectorStore
+from app.services.query_normalizer import normalize_query
 
 
 logger = get_logger(__name__)
@@ -17,7 +18,7 @@ CHINESE_PATTERN = re.compile(r"[\u4e00-\u9fff]+")
 
 def tokenize(text: str) -> list[str]:
     """Tokenize English identifiers and Chinese text without a heavy dependency."""
-    normalized = text.casefold()
+    normalized = normalize_query(text)
     tokens = IDENTIFIER_PATTERN.findall(normalized)
     for sequence in CHINESE_PATTERN.findall(normalized):
         if len(sequence) == 1:
@@ -110,7 +111,7 @@ class BM25Retriever:
             logger.info("BM25 query skipped because the filtered index is empty.")
             return []
 
-        tokenized = [tokenize(chunk["text"]) for chunk in chunks]
+        tokenized = [tokenize((chunk["metadata"].get("entity_name") or "") + "\n" + chunk["text"]) for chunk in chunks]
         lengths = [len(tokens) for tokens in tokenized]
         average_length = sum(lengths) / len(lengths) if lengths else 0.0
         if average_length == 0:
@@ -143,7 +144,7 @@ class BM25Retriever:
             if score > 0:
                 scored.append((score, chunk))
 
-        scored.sort(key=lambda item: item[0], reverse=True)
+        scored.sort(key=lambda item: (-item[0], item[1]["metadata"].get("document_id", ""), item[1]["chunk_id"]))
         results = []
         for rank, (score, chunk) in enumerate(scored[:top_k], start=1):
             results.append(

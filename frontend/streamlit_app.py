@@ -47,6 +47,7 @@ if st.button("上传并入库", type="primary", disabled=uploaded_file is None):
 
 st.divider()
 st.subheader("文档列表")
+st.caption("修改实体标准名称后请重建文档，更新各片段的检索身份提示。")
 
 if st.button("刷新文档列表"):
     st.rerun()
@@ -93,28 +94,49 @@ else:
                     except ApiClientError as exc:
                         st.error(str(exc))
 
+            with st.expander("文档别名设置"):
+                st.caption("将中文名、英文名或简称对应到本文档的实体；别名只用于身份对应，不证明成绩等事实。")
+                alias_state_key = f"aliases-{document_id}"
+                if st.button("加载别名配置", key=f"load-aliases-{document_id}"):
+                    try:
+                        st.session_state[alias_state_key] = client.get_document_aliases(document_id)
+                        st.session_state[f"entity-name-{document_id}"] = st.session_state[alias_state_key].get("entity_name") or ""
+                        st.session_state[f"alias-values-{document_id}"] = "\n".join(st.session_state[alias_state_key].get("aliases") or [])
+                    except ApiClientError as exc:
+                        st.error(str(exc))
+                if alias_state_key in st.session_state:
+                    entity_name = st.text_input("实体名称", key=f"entity-name-{document_id}")
+                    alias_text = st.text_area("别名（每行一个）", key=f"alias-values-{document_id}")
+                    if st.button("保存别名", key=f"save-aliases-{document_id}"):
+                        try:
+                            st.session_state[alias_state_key] = client.update_document_aliases(
+                                document_id, entity_name.strip(),
+                                [line.strip() for line in alias_text.splitlines() if line.strip()],
+                            )
+                            st.success("别名配置已保存。")
+                        except ApiClientError as exc:
+                            st.error(str(exc))
+
 st.divider()
 st.subheader("RAG 问答")
 question = st.text_area(
     "请输入问题",
     placeholder="例如：这份知识库说明了哪些退款规则？",
 )
-top_k = st.slider("Top-K 检索数量", min_value=1, max_value=10, value=3)
 show_chunks = st.toggle("显示检索片段", value=True)
-retrieval_mode_label = st.radio(
-    "检索模式",
-    options=["Vector", "BM25", "Hybrid"],
-    horizontal=True,
-    help="Vector 适合语义改写，BM25 适合错误码和配置名，Hybrid 使用 RRF 融合两路排名。",
-)
-retrieval_mode = retrieval_mode_label.casefold()
 
 document_options = {
     f"{document.get('filename', 'unknown')}｜{document.get('document_id', '')}": document.get("document_id")
     for document in documents
     if document.get("document_id")
 }
-with st.expander("Week11 检索控制"):
+with st.expander("检索设置（高级）"):
+    retrieval_mode_label = st.radio(
+        "检索模式", options=["Vector", "BM25", "Hybrid"], horizontal=True,
+        help="Vector 适合语义改写，BM25 适合精确名称和配置名，Hybrid 融合两路排名。",
+    )
+    retrieval_mode = retrieval_mode_label.casefold()
+    top_k = st.slider("Top-K 检索数量", min_value=1, max_value=10, value=3)
     selected_document_labels = st.multiselect(
         "限定文档范围",
         options=list(document_options),
@@ -130,6 +152,10 @@ with st.expander("Week11 检索控制"):
         disabled=not use_threshold,
         help="当前使用 cosine distance，数值越小通常越相似。",
     )
+    request_debug = st.toggle(
+        "请求检索诊断", value=False,
+        help="包含检索问题和原文，仅供排查；必须同时由服务端开启。折叠面板本身不限制数据访问。",
+    )
 
 selected_document_ids = [
     document_options[label] for label in selected_document_labels
@@ -142,12 +168,14 @@ if st.button("提交问题", type="primary"):
         started_at = time.perf_counter()
         try:
             with st.spinner("正在检索知识库并生成回答……"):
+                debug_options = {"debug": True} if request_debug else {}
                 result = client.query(
                     question.strip(),
                     top_k=top_k,
                     retrieval_mode=retrieval_mode,
                     similarity_threshold=(similarity_threshold if use_threshold else None),
                     document_ids=(selected_document_ids or None),
+                    **debug_options,
                 )
             result["elapsed_seconds"] = time.perf_counter() - started_at
             st.session_state["last_answer"] = result
@@ -177,29 +205,31 @@ if result:
     if not sources:
         if verification_status == "ERROR":
             st.warning("校验服务暂时不可用，未展示未经校验的答案。")
+        elif result.get("citation_status") == "missing":
+            st.info("本次回答未提供可定位引用，未将检索结果自动列为来源。")
         else:
             st.warning("知识库中未找到可靠依据。")
     else:
         for index, source in enumerate(sources, start=1):
+            citation_index = source.get("citation_index", index)
             distance = source.get("distance")
             distance_text = f"{distance:.4f}" if isinstance(distance, (int, float)) else "未知"
             with st.expander(
-                f"来源 {index}｜{source.get('source_file', 'unknown')}｜distance={distance_text}"
+                f"引用 [{citation_index}]｜{source.get('source_file', 'unknown')}"
             ):
-                st.write(f"chunk_id：{source.get('chunk_id', 'unknown')}")
+                st.caption(f"片段：{source.get('chunk_id', 'unknown')}")
+                if isinstance(distance, (int, float)):
+                    st.caption(f"向量距离：{distance_text}（越小越相似）")
                 if show_chunks:
                     st.write(source.get("chunk_preview") or "没有可显示的片段预览。")
-                    st.json(
-                        {
-                            "retrieval_source": source.get("retrieval_source"),
-                            "rank": source.get("rank"),
-                            "vector_score": source.get("vector_score"),
-                            "vector_rank": source.get("vector_rank"),
-                            "bm25_score": source.get("bm25_score"),
-                            "bm25_rank": source.get("bm25_rank"),
-                            "rrf_score": source.get("rrf_score"),
-                        }
-                    )
+
+    if result.get("debug_enabled"):
+        with st.expander("检索诊断", expanded=False):
+            st.caption("vector_score 是兼容旧接口的向量距离字段，数值越小越相似；BM25 和 RRF 分数越大排名越靠前。")
+            st.json(result.get("retrieval_trace") or {})
+            st.json(result.get("retrieval_debug") or [])
+    elif request_debug:
+        st.caption("本次未返回检索诊断；服务端需开启诊断权限。")
 
 st.divider()
 st.subheader("问答历史")

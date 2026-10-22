@@ -1,0 +1,228 @@
+{
+  "stage": "before_upgrade",
+  "dataset": "private_user_resume",
+  "top_k": 3,
+  "distance_threshold": 0.6,
+  "document_count": 1,
+  "chunk_count": 19,
+  "school_evidence_in_index": true,
+  "average_evidence_in_index": false,
+  "code_sha256": {
+    "app.services.retriever": "2e88549547e7bee0487150d42f8051ecd02e59704580d65201c2242a4aaceb73",
+    "app.services.rag_pipeline": "415b27fb1011a24ec270da66a3c1ffb9a4b2711f6af2ac5e160a2cdc566451af"
+  },
+  "embedding_unique_queries": 6,
+  "privacy": "No private document text, answers, names, file names or UUIDs are included.",
+  "retrieval": [
+    {
+      "query_id": "school_zh_name",
+      "mode": "vector",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 1154.985,
+      "error": null
+    },
+    {
+      "query_id": "school_zh_name",
+      "mode": "bm25",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 2.56,
+      "error": null
+    },
+    {
+      "query_id": "school_zh_name",
+      "mode": "hybrid",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 5.036,
+      "error": null
+    },
+    {
+      "query_id": "school_en_name",
+      "mode": "vector",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 910.536,
+      "error": null
+    },
+    {
+      "query_id": "school_en_name",
+      "mode": "bm25",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 2.112,
+      "error": null
+    },
+    {
+      "query_id": "school_en_name",
+      "mode": "hybrid",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 4.569,
+      "error": null
+    },
+    {
+      "query_id": "average_zh_name",
+      "mode": "vector",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 300.711,
+      "error": null
+    },
+    {
+      "query_id": "average_zh_name",
+      "mode": "bm25",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 1.879,
+      "error": null
+    },
+    {
+      "query_id": "average_zh_name",
+      "mode": "hybrid",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 4.454,
+      "error": null
+    },
+    {
+      "query_id": "average_en_name",
+      "mode": "vector",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 300.823,
+      "error": null
+    },
+    {
+      "query_id": "average_en_name",
+      "mode": "bm25",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 2.008,
+      "error": null
+    },
+    {
+      "query_id": "average_en_name",
+      "mode": "hybrid",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 4.217,
+      "error": null
+    },
+    {
+      "query_id": "combined_zh_name",
+      "mode": "vector",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 505.874,
+      "error": null
+    },
+    {
+      "query_id": "combined_zh_name",
+      "mode": "bm25",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 2.047,
+      "error": null
+    },
+    {
+      "query_id": "combined_zh_name",
+      "mode": "hybrid",
+      "result_count": 0,
+      "school_evidence": false,
+      "average_evidence": false,
+      "latency_ms": 4.447,
+      "error": null
+    },
+    {
+      "query_id": "combined_en_name",
+      "mode": "vector",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 402.924,
+      "error": null
+    },
+    {
+      "query_id": "combined_en_name",
+      "mode": "bm25",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 2.033,
+      "error": null
+    },
+    {
+      "query_id": "combined_en_name",
+      "mode": "hybrid",
+      "result_count": 1,
+      "school_evidence": true,
+      "average_evidence": false,
+      "latency_ms": 4.361,
+      "error": null
+    }
+  ],
+  "answer_samples": [
+    {
+      "query_id": "school_zh_name",
+      "mode": "hybrid",
+      "verification": null,
+      "source_count": 0,
+      "answers_school": false,
+      "mentions_average_evidence": false,
+      "latency_ms": 8.968,
+      "error": null
+    },
+    {
+      "query_id": "school_en_name",
+      "mode": "hybrid",
+      "verification": {
+        "status": "PASS"
+      },
+      "source_count": 1,
+      "answers_school": true,
+      "mentions_average_evidence": false,
+      "latency_ms": 7257.279,
+      "error": null
+    },
+    {
+      "query_id": "combined_en_name",
+      "mode": "hybrid",
+      "verification": {
+        "status": "SKIPPED"
+      },
+      "source_count": 1,
+      "answers_school": false,
+      "mentions_average_evidence": false,
+      "latency_ms": 3785.351,
+      "error": null
+    }
+  ],
+  "measurement_notes": [
+    "Evidence presence is a literal diagnostic marker check, not an accuracy label.",
+    "Only three real hybrid answer samples; no statistically representative quality conclusion.",
+    "answer_question called directly, so no application chat_history records were created.",
+    "Vector query embedding cache shared across modes to avoid duplicate paid embedding requests.",
+    "Average evidence means an explicit final/overall average or average-mark label; arbitrary numerical scores do not prove a final average.",
+    "Three actual answer_question executions: Chinese-name school query stopped at empty retrieval, so only two cases invoked the answer-generation API; the English-school case also invoked verification."
+  ],
+  "run_at": "2026-10-22T19:55:40.415449+01:00",
+  "numeric_score_marker_in_index": true,
+  "overall_gpa_evidence_in_original_index": true,
+  "average_marker_definition": "Explicit Final Average label check; not absence of all numerical grades. Original snapshot later confirms Overall GPA label with whitespace-separated 75 / 100."
+}

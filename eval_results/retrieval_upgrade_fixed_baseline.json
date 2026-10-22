@@ -1,0 +1,2048 @@
+{
+  "stage": "before_upgrade",
+  "run_at_utc": "2026-10-22T18:56:57.994820+00:00",
+  "dataset": "existing_26_synthetic_questions",
+  "question_ids": [
+    "q001",
+    "q002",
+    "q003",
+    "q004",
+    "q005",
+    "q006",
+    "q007",
+    "q008",
+    "q009",
+    "q010",
+    "q011",
+    "q012",
+    "q013",
+    "q014",
+    "q015",
+    "q016",
+    "q017",
+    "q018",
+    "q019",
+    "q020",
+    "q021",
+    "q022",
+    "q023",
+    "q024",
+    "q025",
+    "q026"
+  ],
+  "question_count": 26,
+  "retrieval_runs": 78,
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "top_k": 3,
+  "cosine_distance_threshold": 0.6,
+  "eval_chunk_count": 7,
+  "demo_sha256": {
+    "demo_knowledge_base.txt": "af1da879133927b65b6c56a02e4dd82f4b0092792dc4f804167def35f290e830",
+    "company_reimbursement_policy.txt": "b3afedfaa22c084b061ae9a97bd5e611b39a325c81f8998a4042abc629338242",
+    "product_ops_manual.txt": "91acc370e97d8505c7c29e46eb3cc9e9b4bbf70cde0a3ab35a8d744081ede648"
+  },
+  "code_sha256": {
+    "app.services.retriever": "2e88549547e7bee0487150d42f8051ecd02e59704580d65201c2242a4aaceb73",
+    "app.services.chunker": "01fca3d884fd7a0f5216cdbaac0f4bfec0ccb3070a2c926f6ac2e66cf9b0e583"
+  },
+  "retrieval": [
+    {
+      "question_id": "q001",
+      "question": "普通费用应在费用发生后的多少天内提交报销申请？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 285.964,
+      "error_message": ""
+    },
+    {
+      "question_id": "q001",
+      "question": "普通费用应在费用发生后的多少天内提交报销申请？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.658,
+      "error_message": ""
+    },
+    {
+      "question_id": "q001",
+      "question": "普通费用应在费用发生后的多少天内提交报销申请？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.167,
+      "error_message": ""
+    },
+    {
+      "question_id": "q002",
+      "question": "单笔 2000 元的费用需要由谁审批？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 293.86,
+      "error_message": ""
+    },
+    {
+      "question_id": "q002",
+      "question": "单笔 2000 元的费用需要由谁审批？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.067,
+      "error_message": ""
+    },
+    {
+      "question_id": "q002",
+      "question": "单笔 2000 元的费用需要由谁审批？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.035,
+      "error_message": ""
+    },
+    {
+      "question_id": "q003",
+      "question": "员工出差返程后，应在多长时间内完成费用核销？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 334.462,
+      "error_message": ""
+    },
+    {
+      "question_id": "q003",
+      "question": "员工出差返程后，应在多长时间内完成费用核销？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "product_ops_manual.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.051,
+      "error_message": ""
+    },
+    {
+      "question_id": "q003",
+      "question": "员工出差返程后，应在多长时间内完成费用核销？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.371,
+      "error_message": ""
+    },
+    {
+      "question_id": "q004",
+      "question": "财务部门每周哪两天统一支付已完成审批的报销申请？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 369.363,
+      "error_message": ""
+    },
+    {
+      "question_id": "q004",
+      "question": "财务部门每周哪两天统一支付已完成审批的报销申请？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.101,
+      "error_message": ""
+    },
+    {
+      "question_id": "q004",
+      "question": "财务部门每周哪两天统一支付已完成审批的报销申请？",
+      "question_type": "document_direct",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.43,
+      "error_message": ""
+    },
+    {
+      "question_id": "q005",
+      "question": "P0 故障的目标响应时间是多少？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 300.341,
+      "error_message": ""
+    },
+    {
+      "question_id": "q005",
+      "question": "P0 故障的目标响应时间是多少？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.082,
+      "error_message": ""
+    },
+    {
+      "question_id": "q005",
+      "question": "P0 故障的目标响应时间是多少？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 3.796,
+      "error_message": ""
+    },
+    {
+      "question_id": "q006",
+      "question": "运维手册如何定义 P1 故障？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 301.208,
+      "error_message": ""
+    },
+    {
+      "question_id": "q006",
+      "question": "运维手册如何定义 P1 故障？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 1.978,
+      "error_message": ""
+    },
+    {
+      "question_id": "q006",
+      "question": "运维手册如何定义 P1 故障？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.398,
+      "error_message": ""
+    },
+    {
+      "question_id": "q007",
+      "question": "P0 事故应在恢复后的几个工作日内完成复盘？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 300.78,
+      "error_message": ""
+    },
+    {
+      "question_id": "q007",
+      "question": "P0 事故应在恢复后的几个工作日内完成复盘？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.351,
+      "error_message": ""
+    },
+    {
+      "question_id": "q007",
+      "question": "P0 事故应在恢复后的几个工作日内完成复盘？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.94,
+      "error_message": ""
+    },
+    {
+      "question_id": "q008",
+      "question": "常规生产变更上线前必须具备哪两个条件？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 325.312,
+      "error_message": ""
+    },
+    {
+      "question_id": "q008",
+      "question": "常规生产变更上线前必须具备哪两个条件？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 1.879,
+      "error_message": ""
+    },
+    {
+      "question_id": "q008",
+      "question": "常规生产变更上线前必须具备哪两个条件？",
+      "question_type": "document_direct",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.101,
+      "error_message": ""
+    },
+    {
+      "question_id": "q009",
+      "question": "发生超过 3000 元的紧急采购时，采购前要取得哪些批准，采购后还要在多久内补什么材料？",
+      "question_type": "cross_chunk",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 378.927,
+      "error_message": ""
+    },
+    {
+      "question_id": "q009",
+      "question": "发生超过 3000 元的紧急采购时，采购前要取得哪些批准，采购后还要在多久内补什么材料？",
+      "question_type": "cross_chunk",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.161,
+      "error_message": ""
+    },
+    {
+      "question_id": "q009",
+      "question": "发生超过 3000 元的紧急采购时，采购前要取得哪些批准，采购后还要在多久内补什么材料？",
+      "question_type": "cross_chunk",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.437,
+      "error_message": ""
+    },
+    {
+      "question_id": "q010",
+      "question": "发票遗失后应该怎样处理？完成这些步骤是否保证一定能报销？",
+      "question_type": "cross_chunk",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 300.619,
+      "error_message": ""
+    },
+    {
+      "question_id": "q010",
+      "question": "发票遗失后应该怎样处理？完成这些步骤是否保证一定能报销？",
+      "question_type": "cross_chunk",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.427,
+      "error_message": ""
+    },
+    {
+      "question_id": "q010",
+      "question": "发票遗失后应该怎样处理？完成这些步骤是否保证一定能报销？",
+      "question_type": "cross_chunk",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 5.684,
+      "error_message": ""
+    },
+    {
+      "question_id": "q011",
+      "question": "P0 被确认后首先通知谁？如果 30 分钟仍未缓解，还要通知谁？",
+      "question_type": "cross_chunk",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 298.87,
+      "error_message": ""
+    },
+    {
+      "question_id": "q011",
+      "question": "P0 被确认后首先通知谁？如果 30 分钟仍未缓解，还要通知谁？",
+      "question_type": "cross_chunk",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.299,
+      "error_message": ""
+    },
+    {
+      "question_id": "q011",
+      "question": "P0 被确认后首先通知谁？如果 30 分钟仍未缓解，还要通知谁？",
+      "question_type": "cross_chunk",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.629,
+      "error_message": ""
+    },
+    {
+      "question_id": "q012",
+      "question": "服务恢复后，要完成哪些检查和观察才能把事故标记为已恢复？",
+      "question_type": "cross_chunk",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 300.73,
+      "error_message": ""
+    },
+    {
+      "question_id": "q012",
+      "question": "服务恢复后，要完成哪些检查和观察才能把事故标记为已恢复？",
+      "question_type": "cross_chunk",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.342,
+      "error_message": ""
+    },
+    {
+      "question_id": "q012",
+      "question": "服务恢复后，要完成哪些检查和观察才能把事故标记为已恢复？",
+      "question_type": "cross_chunk",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.636,
+      "error_message": ""
+    },
+    {
+      "question_id": "q013",
+      "question": "今天上海的天气怎么样？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 300.292,
+      "error_message": ""
+    },
+    {
+      "question_id": "q013",
+      "question": "今天上海的天气怎么样？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 2.077,
+      "error_message": ""
+    },
+    {
+      "question_id": "q013",
+      "question": "今天上海的天气怎么样？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 4.135,
+      "error_message": ""
+    },
+    {
+      "question_id": "q014",
+      "question": "请证明费马大定理。",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 300.718,
+      "error_message": ""
+    },
+    {
+      "question_id": "q014",
+      "question": "请证明费马大定理。",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "demo_knowledge_base.txt"
+      ],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 0,
+      "refusal_correct": 0,
+      "latency_ms": 1.986,
+      "error_message": ""
+    },
+    {
+      "question_id": "q014",
+      "question": "请证明费马大定理。",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "demo_knowledge_base.txt"
+      ],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 0,
+      "refusal_correct": 0,
+      "latency_ms": 4.011,
+      "error_message": ""
+    },
+    {
+      "question_id": "q015",
+      "question": "2026 年世界杯冠军是哪支球队？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 322.376,
+      "error_message": ""
+    },
+    {
+      "question_id": "q015",
+      "question": "2026 年世界杯冠军是哪支球队？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 2.102,
+      "error_message": ""
+    },
+    {
+      "question_id": "q015",
+      "question": "2026 年世界杯冠军是哪支球队？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 4.07,
+      "error_message": ""
+    },
+    {
+      "question_id": "q016",
+      "question": "我的私人邮箱密码是什么？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "latency_ms": 279.173,
+      "error_message": ""
+    },
+    {
+      "question_id": "q016",
+      "question": "我的私人邮箱密码是什么？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 0,
+      "refusal_correct": 0,
+      "latency_ms": 1.999,
+      "error_message": ""
+    },
+    {
+      "question_id": "q016",
+      "question": "我的私人邮箱密码是什么？",
+      "question_type": "out_of_scope",
+      "expected_source": "",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 0,
+      "refusal_correct": 0,
+      "latency_ms": 4.388,
+      "error_message": ""
+    },
+    {
+      "question_id": "q017",
+      "question": "既然制度保证发票遗失也能报销，请说明保证报销的流程。",
+      "question_type": "hallucination_trap",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 244.233,
+      "error_message": ""
+    },
+    {
+      "question_id": "q017",
+      "question": "既然制度保证发票遗失也能报销，请说明保证报销的流程。",
+      "question_type": "hallucination_trap",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94",
+        "b064db08-8799-44a3-beb4-507cdd89b920"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.283,
+      "error_message": ""
+    },
+    {
+      "question_id": "q017",
+      "question": "既然制度保证发票遗失也能报销，请说明保证报销的流程。",
+      "question_type": "hallucination_trap",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.673,
+      "error_message": ""
+    },
+    {
+      "question_id": "q018",
+      "question": "P1 和 P0 都要求 5 分钟内响应，对吗？",
+      "question_type": "hallucination_trap",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 266.784,
+      "error_message": ""
+    },
+    {
+      "question_id": "q018",
+      "question": "P1 和 P0 都要求 5 分钟内响应，对吗？",
+      "question_type": "hallucination_trap",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.07,
+      "error_message": ""
+    },
+    {
+      "question_id": "q018",
+      "question": "P1 和 P0 都要求 5 分钟内响应，对吗？",
+      "question_type": "hallucination_trap",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.065,
+      "error_message": ""
+    },
+    {
+      "question_id": "q019",
+      "question": "“财务每周二和周五付款”这条信息来自哪份文档？",
+      "question_type": "citation_check",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 288.643,
+      "error_message": ""
+    },
+    {
+      "question_id": "q019",
+      "question": "“财务每周二和周五付款”这条信息来自哪份文档？",
+      "question_type": "citation_check",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.081,
+      "error_message": ""
+    },
+    {
+      "question_id": "q019",
+      "question": "“财务每周二和周五付款”这条信息来自哪份文档？",
+      "question_type": "citation_check",
+      "expected_source": "company_reimbursement_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "b064db08-8799-44a3-beb4-507cdd89b920",
+        "15abe00c-0cfc-4b2e-a1f3-c870b621d1a2",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "company_reimbursement_policy.txt",
+        "company_reimbursement_policy.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.224,
+      "error_message": ""
+    },
+    {
+      "question_id": "q020",
+      "question": "“服务恢复后持续观察 15 分钟”这条要求来自哪份文档？",
+      "question_type": "citation_check",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 308.768,
+      "error_message": ""
+    },
+    {
+      "question_id": "q020",
+      "question": "“服务恢复后持续观察 15 分钟”这条要求来自哪份文档？",
+      "question_type": "citation_check",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 3.192,
+      "error_message": ""
+    },
+    {
+      "question_id": "q020",
+      "question": "“服务恢复后持续观察 15 分钟”这条要求来自哪份文档？",
+      "question_type": "citation_check",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "afa54c3b-dbd7-407f-9808-2c16dbc11c94"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 8.928,
+      "error_message": ""
+    },
+    {
+      "question_id": "q021",
+      "question": "ERR_CONNECTION_104 应该怎样排查？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 339.769,
+      "error_message": ""
+    },
+    {
+      "question_id": "q021",
+      "question": "ERR_CONNECTION_104 应该怎样排查？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.247,
+      "error_message": ""
+    },
+    {
+      "question_id": "q021",
+      "question": "ERR_CONNECTION_104 应该怎样排查？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.002,
+      "error_message": ""
+    },
+    {
+      "question_id": "q022",
+      "question": "API_TIMEOUT_MS 的默认值是多少，在哪里设置？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [],
+      "retrieved_sources": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "latency_ms": 296.085,
+      "error_message": ""
+    },
+    {
+      "question_id": "q022",
+      "question": "API_TIMEOUT_MS 的默认值是多少，在哪里设置？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.471,
+      "error_message": ""
+    },
+    {
+      "question_id": "q022",
+      "question": "API_TIMEOUT_MS 的默认值是多少，在哪里设置？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 5.62,
+      "error_message": ""
+    },
+    {
+      "question_id": "q023",
+      "question": "哪个函数会重新解析文档并替换旧向量？",
+      "question_type": "entity",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 273.776,
+      "error_message": ""
+    },
+    {
+      "question_id": "q023",
+      "question": "哪个函数会重新解析文档并替换旧向量？",
+      "question_type": "entity",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.295,
+      "error_message": ""
+    },
+    {
+      "question_id": "q023",
+      "question": "哪个函数会重新解析文档并替换旧向量？",
+      "question_type": "entity",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 5.617,
+      "error_message": ""
+    },
+    {
+      "question_id": "q024",
+      "question": "OPS-2026-017 对调整生产检索参数有什么要求？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 373.955,
+      "error_message": ""
+    },
+    {
+      "question_id": "q024",
+      "question": "OPS-2026-017 对调整生产检索参数有什么要求？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.226,
+      "error_message": ""
+    },
+    {
+      "question_id": "q024",
+      "question": "OPS-2026-017 对调整生产检索参数有什么要求？",
+      "question_type": "exact_keyword",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 4.937,
+      "error_message": ""
+    },
+    {
+      "question_id": "q025",
+      "question": "如果知识库后端连不上向量库，需要从哪些系统条件开始检查？",
+      "question_type": "semantic",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 299.694,
+      "error_message": ""
+    },
+    {
+      "question_id": "q025",
+      "question": "如果知识库后端连不上向量库，需要从哪些系统条件开始检查？",
+      "question_type": "semantic",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 3.097,
+      "error_message": ""
+    },
+    {
+      "question_id": "q025",
+      "question": "如果知识库后端连不上向量库，需要从哪些系统条件开始检查？",
+      "question_type": "semantic",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "9e9fb91f-3385-4de3-b339-46c103006b0f",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "demo_knowledge_base.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 5.166,
+      "error_message": ""
+    },
+    {
+      "question_id": "q026",
+      "question": "调整检索参数时既要留下效果证据又要能恢复，应该怎么做？",
+      "question_type": "mixed",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "vector",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 298.976,
+      "error_message": ""
+    },
+    {
+      "question_id": "q026",
+      "question": "调整检索参数时既要留下效果证据又要能恢复，应该怎么做？",
+      "question_type": "mixed",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 2.208,
+      "error_message": ""
+    },
+    {
+      "question_id": "q026",
+      "question": "调整检索参数时既要留下效果证据又要能恢复，应该怎么做？",
+      "question_type": "mixed",
+      "expected_source": "product_ops_manual.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_chunk_ids": [
+        "e9b78dc0-f03f-4e6f-b885-e260920afd37",
+        "316a6e01-cad1-42a9-a4ad-cc6794f9c2e6",
+        "59d197c2-54c7-41f3-979f-2233ff28f4d2"
+      ],
+      "retrieved_sources": [
+        "product_ops_manual.txt",
+        "product_ops_manual.txt",
+        "product_ops_manual.txt"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "latency_ms": 5.152,
+      "error_message": ""
+    }
+  ],
+  "summary": [
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "all",
+      "question_count": 26,
+      "answerable_count": 22,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "0.923077",
+      "average_latency_ms": "2.259"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "citation_check",
+      "question_count": 2,
+      "answerable_count": 2,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.636"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "cross_chunk",
+      "question_count": 4,
+      "answerable_count": 4,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.307"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "document_direct",
+      "question_count": 8,
+      "answerable_count": 8,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.146"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "entity",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.295"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "exact_keyword",
+      "question_count": 3,
+      "answerable_count": 3,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.315"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "hallucination_trap",
+      "question_count": 2,
+      "answerable_count": 2,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.176"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "mixed",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "2.208"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "out_of_scope",
+      "question_count": 4,
+      "answerable_count": 0,
+      "hit_rate": "0.000000",
+      "recall_at_k": "0.000000",
+      "mrr": "0.000000",
+      "refusal_accuracy": "0.500000",
+      "average_latency_ms": "2.041"
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "semantic",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "3.097"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "all",
+      "question_count": 26,
+      "answerable_count": 22,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "0.923077",
+      "average_latency_ms": "4.716"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "citation_check",
+      "question_count": 2,
+      "answerable_count": 2,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "6.576"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "cross_chunk",
+      "question_count": 4,
+      "answerable_count": 4,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "4.846"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "document_direct",
+      "question_count": 8,
+      "answerable_count": 8,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "4.280"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "entity",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "5.617"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "exact_keyword",
+      "question_count": 3,
+      "answerable_count": 3,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "4.853"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "hallucination_trap",
+      "question_count": 2,
+      "answerable_count": 2,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "4.369"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "mixed",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "5.152"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "out_of_scope",
+      "question_count": 4,
+      "answerable_count": 0,
+      "hit_rate": "0.000000",
+      "recall_at_k": "0.000000",
+      "mrr": "0.000000",
+      "refusal_accuracy": "0.500000",
+      "average_latency_ms": "4.151"
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "semantic",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "5.166"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "all",
+      "question_count": 26,
+      "answerable_count": 22,
+      "hit_rate": "0.954545",
+      "recall_at_k": "0.954545",
+      "mrr": "0.954545",
+      "refusal_accuracy": "0.961538",
+      "average_latency_ms": "307.065"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "citation_check",
+      "question_count": 2,
+      "answerable_count": 2,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "298.705"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "cross_chunk",
+      "question_count": 4,
+      "answerable_count": 4,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "319.787"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "document_direct",
+      "question_count": 8,
+      "answerable_count": 8,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "313.911"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "entity",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "273.776"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "exact_keyword",
+      "question_count": 3,
+      "answerable_count": 3,
+      "hit_rate": "0.666667",
+      "recall_at_k": "0.666667",
+      "mrr": "0.666667",
+      "refusal_accuracy": "0.666667",
+      "average_latency_ms": "336.603"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "hallucination_trap",
+      "question_count": 2,
+      "answerable_count": 2,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "255.508"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "mixed",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "298.976"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "out_of_scope",
+      "question_count": 4,
+      "answerable_count": 0,
+      "hit_rate": "0.000000",
+      "recall_at_k": "0.000000",
+      "mrr": "0.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "300.640"
+    },
+    {
+      "retrieval_mode": "vector",
+      "question_type": "semantic",
+      "question_count": 1,
+      "answerable_count": 1,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "1.000000",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "299.694"
+    }
+  ],
+  "embedding_unique_texts": 33,
+  "notes": [
+    "Source-level Hit Rate and MRR, not evidence completeness or final answer accuracy.",
+    "Refusal is defined as empty retrieval, not LLM refusal.",
+    "Only synthetic demo documents in a fresh isolated /tmp database; existing evaluation and production collections untouched.",
+    "All 26 fixed questions used; same original ground truth, no tuning to favor one mode.",
+    "Query embeddings are cached across modes, so latency mixes cache behavior and must not be compared as production latency.",
+    "No answer generation in this fixed retrieval experiment."
+  ]
+}

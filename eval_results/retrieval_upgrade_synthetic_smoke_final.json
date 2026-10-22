@@ -1,0 +1,198 @@
+{
+  "dataset": "explicitly_synthetic_people_not_user_resume",
+  "results": [
+    {
+      "test": "upload_pdf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "upload_txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "list_two_documents",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "persist_alias_Alice Example",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "persist_alias_Bob Example",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "pdf_real_page_metadata",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "combined_http",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "combined_debug_closed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "synthetic_document_fact_76",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "school_and_grade_answered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "combined_source_scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "isolated_http",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "isolated_debug_closed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "different_person_88",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "isolated_source_scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "no_evidence_http",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "no_evidence_debug_closed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "unknown_fact_refused",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "no_evidence_source_scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "rebuild_success",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "no_duplicate_index",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "delete_document",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "delete_vectors",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "saved_final_history",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "answer_samples": [
+    {
+      "case": "combined",
+      "answer": "示例甲的本科学校是 Example University A[1]，最终均分是 76/100[1]。",
+      "verification": {
+        "status": "PASS"
+      },
+      "sources": [
+        {
+          "citation_index": 1,
+          "chunk_id": "1d85fe41-63eb-4cba-9ad3-a2ec203c7766",
+          "source_file": "synthetic_alice.pdf",
+          "document_id": "6745b194-8ec8-4767-ae55-6dfa4b928775",
+          "section": "EDUCATION",
+          "page_number": 1,
+          "expanded_from": null,
+          "distance": 0.5330138206481934,
+          "retrieval_source": "hybrid",
+          "rank": 1,
+          "vector_score": 0.5330138206481934,
+          "vector_distance": 0.5330138206481934,
+          "vector_similarity": 0.46698617935180664,
+          "vector_rank": 1,
+          "bm25_score": 0.14024735137996508,
+          "bm25_rank": 2,
+          "rrf_score": 0.03252247488101534,
+          "chunk_preview": "EDUCATION\nExample University A\nBSc Engineering\nFinal Average: 76/100"
+        }
+      ],
+      "latency_ms": 13102.81
+    },
+    {
+      "case": "isolated",
+      "answer": "示例乙的最终均分是 88/100 [2]。",
+      "verification": {
+        "status": "PASS"
+      },
+      "sources": [
+        {
+          "citation_index": 2,
+          "chunk_id": "31d0cb58-d8a8-4912-bc35-bdc6a45d0227",
+          "source_file": "synthetic_bob.txt",
+          "document_id": "b29f5d28-112b-4f99-8fc5-b5a4de620b96",
+          "section": "EDUCATION",
+          "page_number": null,
+          "expanded_from": null,
+          "distance": null,
+          "retrieval_source": "hybrid",
+          "rank": 2,
+          "vector_score": null,
+          "vector_distance": null,
+          "vector_similarity": null,
+          "vector_rank": null,
+          "bm25_score": 0.14024735137996508,
+          "bm25_rank": 2,
+          "rrf_score": 0.016129032258064516,
+          "chunk_preview": "EDUCATION\nExample University B\nBSc Computing\nFinal Average: 88/100"
+        }
+      ],
+      "latency_ms": 6446.73
+    },
+    {
+      "case": "no_evidence",
+      "answer": "根据当前知识库资料，无法确定该问题的答案。",
+      "verification": {
+        "status": "SKIPPED"
+      },
+      "sources": [],
+      "latency_ms": 5222.74
+    }
+  ],
+  "all_passed": true,
+  "production_data_untouched": true
+}

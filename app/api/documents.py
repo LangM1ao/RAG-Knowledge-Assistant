@@ -12,6 +12,8 @@ from app.db.document_repository import (
     list_document_records,
 )
 from app.schemas.document import DocumentInfo, DocumentUploadResponse
+from app.schemas.entity_alias import DocumentAliasesRequest
+from app.services import entity_aliases
 from app.services.document_parser import parse_document
 from app.services.document_service import (
     delete_document_by_id,
@@ -239,3 +241,28 @@ def rebuild_document_api(document_id: str):
     )
 
     return result
+
+
+@router.get("/{document_id}/aliases")
+def get_aliases(document_id: str):
+    if get_document_by_id(document_id) is None:
+        raise HTTPException(status_code=404, detail="Document not found.")
+    return entity_aliases.get_document_aliases(document_id)
+
+
+@router.put("/{document_id}/aliases")
+def set_aliases(document_id: str, request: DocumentAliasesRequest):
+    if get_document_by_id(document_id) is None:
+        raise HTTPException(status_code=404, detail="Document not found.")
+    try:
+        return entity_aliases.set_document_aliases(document_id, request.entity_name, request.aliases)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from None
+
+
+@router.delete("/{document_id}/aliases")
+def remove_aliases(document_id: str):
+    if get_document_by_id(document_id) is None:
+        raise HTTPException(status_code=404, detail="Document not found.")
+    entity_aliases.delete_document_aliases(document_id)
+    return {"success": True}

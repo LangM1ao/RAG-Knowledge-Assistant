@@ -65,3 +65,10 @@ BM25 每次查询读取当前 Chroma collection，并在内存重建索引。知
 
 
 答案校验开关、结构化输出和异常处理详见 [answer_verification.md](answer_verification.md)。阈值仍仅过滤向量分支，新增校验不改变 BM25 / RRF 的规则。
+
+
+## 2026-10-22 检索质量链路
+
+Query -> NFKC/casefold -> scoped explicit aliases -> Vector/BM25 -> deduplicated RRF -> Top-K -> bounded same-document/section neighbors -> bounded context -> partial evidence answer -> same-context verification -> actual citations -> history。
+
+Ingestion -> real pages -> structure chunks/offset -> identity-aware embedding (source unchanged) -> journaled staged index switch -> SQLite update。Startup recovers interrupted switches; one API worker, not distributed atomicity。
