@@ -1,0 +1,1971 @@
+{
+  "stage": "after",
+  "run_id": "no_evidence_probe",
+  "code_commit": "1d39989dbcc774923bf3cae3430a4a1edaf5da5e",
+  "time_utc": "2026-10-22T20:46:18.005709+00:00",
+  "corpus_sha256": {
+    "cn_operations.txt": "132d4163d6c9bdc6e47df7d307c207ab60b24291e19319655d758ac534f066af",
+    "cn_policy.txt": "f5a0ee3695360cd060bbd2272df31a4ec235dfc69c4e114507520c998c2e8b92",
+    "en_database.txt": "fd4c7f1f38bbc28279f126f3201ffd34046a670b515fe7467f631d317de3f13d",
+    "lyra_platform.txt": "d4a8d895b4034856276f1667d4a973afa10d7e6c7a2a3a943aefab5ef2d28017",
+    "mixed_product.txt": "45e8dcc49c31939d1cac2973593b8539f1708552ee01ac1ed9607ce8e0ed5516",
+    "partner_policy.txt": "f4065c4eb2a9aa3ffd57d687581f34fcaa969375b206899c519a104b5ff44505",
+    "plain_notes.txt": "6785cd4fe4b3fe6bd10765af4f9fa291bd831afb0714b002131214175aa07fe1",
+    "portfolio.txt": "28feba2a3819fa800a6456fda8557887bf31838c03252e3e9376a517b9bb8299"
+  },
+  "question_count": 24,
+  "parameters": {
+    "top_k": 3,
+    "max_distance": 0.6,
+    "chunk_size": 500,
+    "overlap": 50
+  },
+  "chunk_count": 33,
+  "real_embedding_cache_misses": 0,
+  "rows": [
+    {
+      "question_id": "g01",
+      "question": "员工每周最多可以远程办公几天？",
+      "question_type": "A_zh_zh",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "partner_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1",
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1",
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408"
+      ],
+      "latency_ms": 8.561,
+      "error_message": ""
+    },
+    {
+      "question_id": "g01",
+      "question": "员工每周最多可以远程办公几天？",
+      "question_type": "A_zh_zh",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c"
+      ],
+      "latency_ms": 7.131,
+      "error_message": ""
+    },
+    {
+      "question_id": "g01",
+      "question": "员工每周最多可以远程办公几天？",
+      "question_type": "A_zh_zh",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt",
+        "partner_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "latency_ms": 11.256,
+      "error_message": ""
+    },
+    {
+      "question_id": "g02",
+      "question": "How does the database platform improve query performance?",
+      "question_type": "B_en_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "en_database.txt",
+        "lyra_platform.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "7795e031-4328-4430-bae6-6314ab91b521"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "7795e031-4328-4430-bae6-6314ab91b521"
+      ],
+      "latency_ms": 6.902,
+      "error_message": ""
+    },
+    {
+      "question_id": "g02",
+      "question": "How does the database platform improve query performance?",
+      "question_type": "B_en_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "en_database.txt",
+        "en_database.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1"
+      ],
+      "latency_ms": 7.215,
+      "error_message": ""
+    },
+    {
+      "question_id": "g02",
+      "question": "How does the database platform improve query performance?",
+      "question_type": "B_en_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "en_database.txt",
+        "lyra_platform.txt",
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6"
+      ],
+      "latency_ms": 11.185,
+      "error_message": ""
+    },
+    {
+      "question_id": "g03",
+      "question": "系统通过哪些方法提高数据库查询性能？",
+      "question_type": "C_zh_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd"
+      ],
+      "latency_ms": 7.723,
+      "error_message": ""
+    },
+    {
+      "question_id": "g03",
+      "question": "系统通过哪些方法提高数据库查询性能？",
+      "question_type": "C_zh_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [],
+      "latency_ms": 6.567,
+      "error_message": ""
+    },
+    {
+      "question_id": "g03",
+      "question": "系统通过哪些方法提高数据库查询性能？",
+      "question_type": "C_zh_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd"
+      ],
+      "latency_ms": 10.703,
+      "error_message": ""
+    },
+    {
+      "question_id": "g04",
+      "question": "How should the service recover after repeated connection failures?",
+      "question_type": "D_en_zh",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_operations.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d"
+      ],
+      "latency_ms": 6.519,
+      "error_message": ""
+    },
+    {
+      "question_id": "g04",
+      "question": "How should the service recover after repeated connection failures?",
+      "question_type": "D_en_zh",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1"
+      ],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1"
+      ],
+      "latency_ms": 6.928,
+      "error_message": ""
+    },
+    {
+      "question_id": "g04",
+      "question": "How should the service recover after repeated connection failures?",
+      "question_type": "D_en_zh",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_operations.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1"
+      ],
+      "latency_ms": 13.233,
+      "error_message": ""
+    },
+    {
+      "question_id": "g05",
+      "question": "运行日志应该保留多久？",
+      "question_type": "E_sections",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_operations.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5"
+      ],
+      "latency_ms": 6.584,
+      "error_message": ""
+    },
+    {
+      "question_id": "g05",
+      "question": "运行日志应该保留多久？",
+      "question_type": "E_sections",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "cn_operations.txt",
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "latency_ms": 6.827,
+      "error_message": ""
+    },
+    {
+      "question_id": "g05",
+      "question": "运行日志应该保留多久？",
+      "question_type": "E_sections",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_operations.txt",
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "latency_ms": 10.947,
+      "error_message": ""
+    },
+    {
+      "question_id": "g06",
+      "question": "星图工程在数据库查询性能优化项目中使用了哪些技术？",
+      "question_type": "F_projects",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "latency_ms": 7.505,
+      "error_message": ""
+    },
+    {
+      "question_id": "g06",
+      "question": "星图工程在数据库查询性能优化项目中使用了哪些技术？",
+      "question_type": "F_projects",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [],
+      "latency_ms": 6.688,
+      "error_message": ""
+    },
+    {
+      "question_id": "g06",
+      "question": "星图工程在数据库查询性能优化项目中使用了哪些技术？",
+      "question_type": "F_projects",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "latency_ms": 11.522,
+      "error_message": ""
+    },
+    {
+      "question_id": "g07",
+      "question": "Atlas Engineering 如何提高数据库查询性能？",
+      "question_type": "G_repeated_identity",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "latency_ms": 7.312,
+      "error_message": ""
+    },
+    {
+      "question_id": "g07",
+      "question": "Atlas Engineering 如何提高数据库查询性能？",
+      "question_type": "G_repeated_identity",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [],
+      "latency_ms": 6.452,
+      "error_message": ""
+    },
+    {
+      "question_id": "g07",
+      "question": "Atlas Engineering 如何提高数据库查询性能？",
+      "question_type": "G_repeated_identity",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "latency_ms": 11.944,
+      "error_message": ""
+    },
+    {
+      "question_id": "g08",
+      "question": "星图工程在数据库查询优化项目中做了什么？",
+      "question_type": "H_fusion",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "latency_ms": 7.402,
+      "error_message": ""
+    },
+    {
+      "question_id": "g08",
+      "question": "星图工程在数据库查询优化项目中做了什么？",
+      "question_type": "H_fusion",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [],
+      "latency_ms": 6.564,
+      "error_message": ""
+    },
+    {
+      "question_id": "g08",
+      "question": "星图工程在数据库查询优化项目中做了什么？",
+      "question_type": "H_fusion",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "latency_ms": 11.676,
+      "error_message": ""
+    },
+    {
+      "question_id": "g09",
+      "question": "What does ERR_STORAGE_204 mean?",
+      "question_type": "I_exact_identifier",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 6.575,
+      "error_message": ""
+    },
+    {
+      "question_id": "g09",
+      "question": "What does ERR_STORAGE_204 mean?",
+      "question_type": "I_exact_identifier",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 7.15,
+      "error_message": ""
+    },
+    {
+      "question_id": "g09",
+      "question": "What does ERR_STORAGE_204 mean?",
+      "question_type": "I_exact_identifier",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 12.157,
+      "error_message": ""
+    },
+    {
+      "question_id": "g10",
+      "question": "API_TIMEOUT_MS 默认是多少？",
+      "question_type": "I_exact_identifier",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 6.705,
+      "error_message": ""
+    },
+    {
+      "question_id": "g10",
+      "question": "API_TIMEOUT_MS 默认是多少？",
+      "question_type": "I_exact_identifier",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 6.777,
+      "error_message": ""
+    },
+    {
+      "question_id": "g10",
+      "question": "API_TIMEOUT_MS 默认是多少？",
+      "question_type": "I_exact_identifier",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 10.622,
+      "error_message": ""
+    },
+    {
+      "question_id": "g11",
+      "question": "What is the secret access password SATURN_PRIVATE_998? ",
+      "question_type": "J_unanswerable",
+      "expected_source": "",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": null,
+      "context_evidence_recall": null,
+      "context_chunk_ids": [],
+      "latency_ms": 6.872,
+      "error_message": ""
+    },
+    {
+      "question_id": "g11",
+      "question": "What is the secret access password SATURN_PRIVATE_998? ",
+      "question_type": "J_unanswerable",
+      "expected_source": "",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": null,
+      "context_evidence_recall": null,
+      "context_chunk_ids": [],
+      "latency_ms": 7.913,
+      "error_message": ""
+    },
+    {
+      "question_id": "g11",
+      "question": "What is the secret access password SATURN_PRIVATE_998? ",
+      "question_type": "J_unanswerable",
+      "expected_source": "",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": null,
+      "context_evidence_recall": null,
+      "context_chunk_ids": [],
+      "latency_ms": 11.207,
+      "error_message": ""
+    },
+    {
+      "question_id": "g12",
+      "question": "How many days can staff work remotely each week?",
+      "question_type": "K_scope",
+      "expected_source": "partner_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "partner_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "latency_ms": 7.109,
+      "error_message": ""
+    },
+    {
+      "question_id": "g12",
+      "question": "How many days can staff work remotely each week?",
+      "question_type": "K_scope",
+      "expected_source": "partner_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "partner_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "latency_ms": 7.201,
+      "error_message": ""
+    },
+    {
+      "question_id": "g12",
+      "question": "How many days can staff work remotely each week?",
+      "question_type": "K_scope",
+      "expected_source": "partner_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "partner_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "c1061d92-d4bb-44e1-96a7-f0c9e394e3b1"
+      ],
+      "latency_ms": 10.718,
+      "error_message": ""
+    },
+    {
+      "question_id": "g13",
+      "question": "员工最多可远程办公多少天？",
+      "question_type": "K_scope",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408"
+      ],
+      "latency_ms": 7.186,
+      "error_message": ""
+    },
+    {
+      "question_id": "g13",
+      "question": "员工最多可远程办公多少天？",
+      "question_type": "K_scope",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c"
+      ],
+      "latency_ms": 6.408,
+      "error_message": ""
+    },
+    {
+      "question_id": "g13",
+      "question": "员工最多可远程办公多少天？",
+      "question_type": "K_scope",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408"
+      ],
+      "latency_ms": 10.487,
+      "error_message": ""
+    },
+    {
+      "question_id": "g14",
+      "question": "普通报销需要在费用发生后多长时间内提交？",
+      "question_type": "L_citation",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "plain_notes.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408",
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408",
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "latency_ms": 6.608,
+      "error_message": ""
+    },
+    {
+      "question_id": "g14",
+      "question": "普通报销需要在费用发生后多长时间内提交？",
+      "question_type": "L_citation",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt",
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "latency_ms": 7.08,
+      "error_message": ""
+    },
+    {
+      "question_id": "g14",
+      "question": "普通报销需要在费用发生后多长时间内提交？",
+      "question_type": "L_citation",
+      "expected_source": "cn_policy.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "plain_notes.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408",
+        "69af8627-a37f-45cb-96f0-8136b31330ca",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "47af4ba7-bdff-4200-b0e8-24ed53a05408",
+        "69af8627-a37f-45cb-96f0-8136b31330ca",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d"
+      ],
+      "latency_ms": 11.194,
+      "error_message": ""
+    },
+    {
+      "question_id": "g15",
+      "question": "Storage Gateway 出现 ERR_STORAGE_204 应该怎么办？",
+      "question_type": "mixed_language",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "mixed_product.txt",
+        "mixed_product.txt",
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b",
+        "b225a895-aed4-430d-b052-11d2b3897f2b",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b",
+        "b225a895-aed4-430d-b052-11d2b3897f2b",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "latency_ms": 6.617,
+      "error_message": ""
+    },
+    {
+      "question_id": "g15",
+      "question": "Storage Gateway 出现 ERR_STORAGE_204 应该怎么办？",
+      "question_type": "mixed_language",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b"
+      ],
+      "latency_ms": 7.609,
+      "error_message": ""
+    },
+    {
+      "question_id": "g15",
+      "question": "Storage Gateway 出现 ERR_STORAGE_204 应该怎么办？",
+      "question_type": "mixed_language",
+      "expected_source": "mixed_product.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "mixed_product.txt",
+        "mixed_product.txt",
+        "mixed_product.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b",
+        "b225a895-aed4-430d-b052-11d2b3897f2b",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "448b9251-cd2a-4601-a79d-40e720921d0b",
+        "b225a895-aed4-430d-b052-11d2b3897f2b",
+        "7d0c3893-6db5-4dc0-9b32-67d44f5cd5d3"
+      ],
+      "latency_ms": 11.025,
+      "error_message": ""
+    },
+    {
+      "question_id": "g16",
+      "question": "比较猎户系统和天琴工具如何优化数据库读取性能。",
+      "question_type": "multi_entity",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "lyra_platform.txt",
+        "en_database.txt",
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 0.5,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6"
+      ],
+      "latency_ms": 11.712,
+      "error_message": ""
+    },
+    {
+      "question_id": "g16",
+      "question": "比较猎户系统和天琴工具如何优化数据库读取性能。",
+      "question_type": "multi_entity",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "en_database.txt",
+        "lyra_platform.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "latency_ms": 13.062,
+      "error_message": ""
+    },
+    {
+      "question_id": "g16",
+      "question": "比较猎户系统和天琴工具如何优化数据库读取性能。",
+      "question_type": "multi_entity",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "en_database.txt",
+        "lyra_platform.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "latency_ms": 17.862,
+      "error_message": ""
+    },
+    {
+      "question_id": "g17",
+      "question": "Which techniques are used in Warehouse Forecasting Pilot?",
+      "question_type": "F_projects",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "latency_ms": 6.977,
+      "error_message": ""
+    },
+    {
+      "question_id": "g17",
+      "question": "Which techniques are used in Warehouse Forecasting Pilot?",
+      "question_type": "F_projects",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "latency_ms": 7.261,
+      "error_message": ""
+    },
+    {
+      "question_id": "g17",
+      "question": "Which techniques are used in Warehouse Forecasting Pilot?",
+      "question_type": "F_projects",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "ed68a2da-5425-48c5-8c1c-554630d7ccb9"
+      ],
+      "latency_ms": 11.121,
+      "error_message": ""
+    },
+    {
+      "question_id": "g18",
+      "question": "设备交接如何才能标记完成？",
+      "question_type": "E_plain",
+      "expected_source": "plain_notes.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "plain_notes.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "latency_ms": 6.828,
+      "error_message": ""
+    },
+    {
+      "question_id": "g18",
+      "question": "设备交接如何才能标记完成？",
+      "question_type": "E_plain",
+      "expected_source": "plain_notes.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "plain_notes.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "latency_ms": 7.245,
+      "error_message": ""
+    },
+    {
+      "question_id": "g18",
+      "question": "设备交接如何才能标记完成？",
+      "question_type": "E_plain",
+      "expected_source": "plain_notes.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "plain_notes.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "69af8627-a37f-45cb-96f0-8136b31330ca"
+      ],
+      "latency_ms": 11.584,
+      "error_message": ""
+    },
+    {
+      "question_id": "g19",
+      "question": "数据库备份和恢复验证的频率分别是什么？",
+      "question_type": "C_zh_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_operations.txt",
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 0.5,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "latency_ms": 11.782,
+      "error_message": ""
+    },
+    {
+      "question_id": "g19",
+      "question": "数据库备份和恢复验证的频率分别是什么？",
+      "question_type": "C_zh_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "cn_operations.txt",
+        "cn_operations.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "b8a04547-8b98-4537-ba38-adecc289e96d"
+      ],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "b8a04547-8b98-4537-ba38-adecc289e96d"
+      ],
+      "latency_ms": 11.339,
+      "error_message": ""
+    },
+    {
+      "question_id": "g19",
+      "question": "数据库备份和恢复验证的频率分别是什么？",
+      "question_type": "C_zh_en",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_operations.txt",
+        "cn_operations.txt",
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d",
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 0.3333333333333333,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "b8a04547-8b98-4537-ba38-adecc289e96d",
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "latency_ms": 16.789,
+      "error_message": ""
+    },
+    {
+      "question_id": "g20",
+      "question": "How long are operational logs retained?",
+      "question_type": "D_en_zh",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "cn_operations.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5"
+      ],
+      "latency_ms": 6.781,
+      "error_message": ""
+    },
+    {
+      "question_id": "g20",
+      "question": "How long are operational logs retained?",
+      "question_type": "D_en_zh",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [],
+      "latency_ms": 7.256,
+      "error_message": ""
+    },
+    {
+      "question_id": "g20",
+      "question": "How long are operational logs retained?",
+      "question_type": "D_en_zh",
+      "expected_source": "cn_operations.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_operations.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "dc570661-0b02-46f0-b745-cdc0cf55b7c5"
+      ],
+      "latency_ms": 11.247,
+      "error_message": ""
+    },
+    {
+      "question_id": "g21",
+      "question": "Orion Systems 怎样用 EXPLAIN 检查查询？",
+      "question_type": "mixed_language",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "en_database.txt",
+        "en_database.txt",
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "latency_ms": 7.404,
+      "error_message": ""
+    },
+    {
+      "question_id": "g21",
+      "question": "Orion Systems 怎样用 EXPLAIN 检查查询？",
+      "question_type": "mixed_language",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd"
+      ],
+      "latency_ms": 6.512,
+      "error_message": ""
+    },
+    {
+      "question_id": "g21",
+      "question": "Orion Systems 怎样用 EXPLAIN 检查查询？",
+      "question_type": "mixed_language",
+      "expected_source": "en_database.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "en_database.txt",
+        "en_database.txt",
+        "en_database.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "91bd1e8c-6ef6-4a80-85b7-231512bcc6fd",
+        "514f2415-9b81-4c6d-8ec7-294c569c99e6",
+        "e2181147-d553-4179-bd45-40fae018c5f2"
+      ],
+      "latency_ms": 11.096,
+      "error_message": ""
+    },
+    {
+      "question_id": "g22",
+      "question": "员工的私人银行卡密码是多少？",
+      "question_type": "J_unanswerable",
+      "expected_source": "",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 1,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": null,
+      "context_evidence_recall": null,
+      "context_chunk_ids": [],
+      "latency_ms": 6.687,
+      "error_message": ""
+    },
+    {
+      "question_id": "g22",
+      "question": "员工的私人银行卡密码是多少？",
+      "question_type": "J_unanswerable",
+      "expected_source": "",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d"
+      ],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 0,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": null,
+      "context_evidence_recall": null,
+      "context_chunk_ids": [
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d"
+      ],
+      "latency_ms": 6.829,
+      "error_message": ""
+    },
+    {
+      "question_id": "g22",
+      "question": "员工的私人银行卡密码是多少？",
+      "question_type": "J_unanswerable",
+      "expected_source": "",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "cn_policy.txt",
+        "cn_policy.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d"
+      ],
+      "hit": "",
+      "reciprocal_rank": "",
+      "refused": 0,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": null,
+      "context_evidence_recall": null,
+      "context_chunk_ids": [
+        "3388e5ec-71c2-4876-9de1-98bbe1a9f32c",
+        "bdf6b532-b4cf-4e0d-a985-115fd04f591d"
+      ],
+      "latency_ms": 11.946,
+      "error_message": ""
+    },
+    {
+      "question_id": "g23",
+      "question": "Redis cache expiry in Lyra Tools?",
+      "question_type": "I_exact_identifier",
+      "expected_source": "lyra_platform.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "lyra_platform.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "latency_ms": 7.029,
+      "error_message": ""
+    },
+    {
+      "question_id": "g23",
+      "question": "Redis cache expiry in Lyra Tools?",
+      "question_type": "I_exact_identifier",
+      "expected_source": "lyra_platform.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [
+        "lyra_platform.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "latency_ms": 6.855,
+      "error_message": ""
+    },
+    {
+      "question_id": "g23",
+      "question": "Redis cache expiry in Lyra Tools?",
+      "question_type": "I_exact_identifier",
+      "expected_source": "lyra_platform.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "lyra_platform.txt",
+        "lyra_platform.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "67c91495-8ae4-4c54-af47-f9f0271e76c1",
+        "4812372d-d960-4d82-a0e6-37820b2a6f82"
+      ],
+      "latency_ms": 10.673,
+      "error_message": ""
+    },
+    {
+      "question_id": "g24",
+      "question": "星图工程 查询性能优化 使用的索引方法是什么？",
+      "question_type": "G_repeated_identity",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "vector",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "latency_ms": 7.368,
+      "error_message": ""
+    },
+    {
+      "question_id": "g24",
+      "question": "星图工程 查询性能优化 使用的索引方法是什么？",
+      "question_type": "G_repeated_identity",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "bm25",
+      "retrieved_sources": [],
+      "retrieved_chunk_ids": [],
+      "hit": 0,
+      "reciprocal_rank": 0.0,
+      "refused": 1,
+      "refusal_correct": 0,
+      "evidence_recall_at_k": 0.0,
+      "context_evidence_recall": 0.0,
+      "context_chunk_ids": [],
+      "latency_ms": 6.61,
+      "error_message": ""
+    },
+    {
+      "question_id": "g24",
+      "question": "星图工程 查询性能优化 使用的索引方法是什么？",
+      "question_type": "G_repeated_identity",
+      "expected_source": "portfolio.txt",
+      "retrieval_mode": "hybrid",
+      "retrieved_sources": [
+        "portfolio.txt",
+        "portfolio.txt"
+      ],
+      "retrieved_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "hit": 1,
+      "reciprocal_rank": 1.0,
+      "refused": 0,
+      "refusal_correct": 1,
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "context_chunk_ids": [
+        "7795e031-4328-4430-bae6-6314ab91b521",
+        "03c70c93-7953-4c9d-bcfe-21ab4cb898f9"
+      ],
+      "latency_ms": 11.679,
+      "error_message": ""
+    }
+  ],
+  "answer_samples": [
+    {
+      "question_id": "g22",
+      "retrieval_mode": "vector",
+      "answer": "知识库中没有找到相关依据，因此我不能确定答案。",
+      "answer_correct": true,
+      "refusal_correct": true,
+      "citation_precision": null,
+      "context_evidence_recall": null,
+      "verification": {
+        "status": "SKIPPED"
+      },
+      "sources": [],
+      "latency_ms": 6.51
+    },
+    {
+      "question_id": "g22",
+      "retrieval_mode": "bm25",
+      "answer": "根据当前知识库资料，无法确定该问题的答案。",
+      "answer_correct": true,
+      "refusal_correct": true,
+      "citation_precision": null,
+      "context_evidence_recall": null,
+      "verification": {
+        "status": "SKIPPED"
+      },
+      "sources": [],
+      "latency_ms": 3096.67
+    },
+    {
+      "question_id": "g22",
+      "retrieval_mode": "hybrid",
+      "answer": "根据当前知识库资料，无法确定该问题的答案。",
+      "answer_correct": true,
+      "refusal_correct": true,
+      "citation_precision": null,
+      "context_evidence_recall": null,
+      "verification": {
+        "status": "SKIPPED"
+      },
+      "sources": [],
+      "latency_ms": 2439.93
+    }
+  ],
+  "summary": [
+    {
+      "retrieval_mode": "vector",
+      "question_type": "all",
+      "question_count": 24,
+      "answerable_count": 22,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "0.954545",
+      "refusal_accuracy": "1.000000",
+      "average_latency_ms": "7.448",
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "sampled_answer_accuracy": 1.0,
+      "sampled_refusal_accuracy": 1.0,
+      "sampled_citation_precision": null
+    },
+    {
+      "retrieval_mode": "bm25",
+      "question_type": "all",
+      "question_count": 24,
+      "answerable_count": 22,
+      "hit_rate": "0.636364",
+      "recall_at_k": "0.636364",
+      "mrr": "0.636364",
+      "refusal_accuracy": "0.708333",
+      "average_latency_ms": "7.395",
+      "evidence_recall_at_k": 0.6363636363636364,
+      "context_evidence_recall": 0.6363636363636364,
+      "sampled_answer_accuracy": 1.0,
+      "sampled_refusal_accuracy": 1.0,
+      "sampled_citation_precision": null
+    },
+    {
+      "retrieval_mode": "hybrid",
+      "question_type": "all",
+      "question_count": 24,
+      "answerable_count": 22,
+      "hit_rate": "1.000000",
+      "recall_at_k": "1.000000",
+      "mrr": "0.969697",
+      "refusal_accuracy": "0.958333",
+      "average_latency_ms": "11.828",
+      "evidence_recall_at_k": 1.0,
+      "context_evidence_recall": 1.0,
+      "sampled_answer_accuracy": 1.0,
+      "sampled_refusal_accuracy": 1.0,
+      "sampled_citation_precision": null
+    }
+  ],
+  "notes": [
+    "Synthetic non-private corpus only; isolated SQLite and Chroma.",
+    "Week11 source Hit/MRR and additional explicit evidence-span recall are reported separately.",
+    "Answer Accuracy uses declared keyword/fact groups plus retrieved evidence and real-source checks, not an independent semantic gold evaluator.",
+    "Citation precision checks evidence-bearing cited chunks; sample text must still be reviewed.",
+    "Cached embeddings mean latency is not a production benchmark.",
+    "BM25 is not expected to translate a query with no matching lexical content."
+  ]
+}

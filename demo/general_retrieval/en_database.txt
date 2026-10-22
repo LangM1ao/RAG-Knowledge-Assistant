@@ -1,0 +1,5 @@
+# Database Platform Manual
+## Query Efficiency
+Orion Systems improves database query performance through composite indexes and query optimisation. Engineers use EXPLAIN to inspect query plans before deployment.
+## Backup Procedure
+The database team creates nightly snapshots and tests restoration every month.

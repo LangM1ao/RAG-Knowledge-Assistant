@@ -53,12 +53,15 @@ def test_alias_replaces_query_and_restricts_identity_scope():
     assert r.last_debug['alias_matches']==[]
 
 
-def test_ambiguous_alias_does_not_mix_two_people():
+def test_ambiguous_alias_keeps_scope_without_assuming_identity():
     rows=[{'document_id':d,'source_file':d+'.txt','entity_name':n,'aliases':['同名']} for d,n in [('a','Alice Example'),('b','Bob Example')]]
-    store=SimpleNamespace(query=lambda **kw: pytest.fail('ambiguous identity must not retrieve'))
+    calls=[]
+    store=SimpleNamespace(query=lambda **kw: calls.append(kw) or [])
     r=Retriever(vector_store=store,alias_records=rows)
     assert r.query('同名在哪里读书？')==[]
-    assert r.last_debug['stop_reason']=='ambiguous_entity_alias'
+    assert calls and '同名' in calls[0]['question']
+    assert 'document_ids' not in calls[0]
+    assert r.last_debug['ambiguous_aliases']==['同名']
 
 
 def test_latin_alias_is_not_a_substring_of_another_name():
@@ -71,7 +74,7 @@ def test_latin_alias_is_not_a_substring_of_another_name():
 def test_neighbors_stay_in_document_section_and_budget(monkeypatch):
     from app.services import retriever as module
     def chunk(i,doc='a',section='EDUCATION',text=None):
-        return {'chunk_id':f'{doc}-{i}','text':text or 'Evidence '+str(i),'metadata':{'document_id':doc,'source_file':doc+'.txt','chunk_index':i,'section_title':section}}
+        return {'chunk_id':f'{doc}-{i}','text':text or 'Evidence '+str(i),'metadata':{'document_id':doc,'source_file':doc+'.txt','chunk_index':i,'section_title':section,'structure_id':section,'structure_version':2,'structure_reliable':True}}
     anchor=chunk(1)
     allrows=[chunk(0,section='CONTACT'),anchor,chunk(2),chunk(2,doc='b')]
     class Collection:

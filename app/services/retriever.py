@@ -103,19 +103,22 @@ class Retriever:
                 and (not source_files or row.get('source_file') in source_files)]
         alias = resolve_aliases(question, rows)
         self.last_debug = {'normalized_query': normalize_query(question),
-                           'retrieval_query': alias['query'], 'alias_matches': alias['matches'],
+                           'original_query': question, 'retrieval_query': alias['query'],
+                           'content_query': alias['content_query'], 'alias_matches': alias['matches'],
+                           'ambiguous_aliases': alias['ambiguous_aliases'],
+                           'retrieval_mode': retrieval_mode, 'top_k': top_k,
+                           'max_distance': similarity_threshold,
+                           'requested_filter': {'document_ids': document_ids, 'source_files': source_files},
                            'vector_candidate_count': 0, 'bm25_candidate_count': 0,
                            'fused_count': 0, 'threshold_filtered_count': 0,
                            'final_chunks': [], 'context_expansion': []}
-        if alias['ambiguous']:
-            self.last_debug['stop_reason'] = 'ambiguous_entity_alias'
-            return []
         if not alias['query']:
             self.last_debug['stop_reason'] = 'empty_query'
             return []
         effective_ids = document_ids
-        if alias['matches']:
-            effective_ids = list(dict.fromkeys(m['document_id'] for m in alias['matches']))
+        if not document_ids and not source_files and alias['constraint_document_ids']:
+            effective_ids = alias['constraint_document_ids']
+        self.last_debug['effective_filter'] = {'document_ids': effective_ids, 'source_files': source_files}
         common = {'question': alias['query']}
         if effective_ids:
             common['document_ids'] = effective_ids
@@ -132,14 +135,19 @@ class Retriever:
                                    threshold_filtered_count=detail.get('filtered_count', 0),
                                    vector_filter_details=detail)
         if retrieval_mode != 'vector':
-            bm25_results = self._bm25().query(**common, top_k=max(top_k, BM25_CANDIDATE_K) if retrieval_mode=='hybrid' else top_k)
+            bm25 = self._bm25()
+            lexical_options = {**common, 'question': alias['content_query']}
+            candidates = bm25.query(**lexical_options, top_k=max(top_k, BM25_CANDIDATE_K) if retrieval_mode=='hybrid' else top_k)
+            bm25_results = [item for item in candidates if item.get('content_match', True) and item.get('bm25_score', item.get('score', 0)) > 0]
             self.last_debug['bm25_candidate_count'] = len(bm25_results)
+            self.last_debug['bm25_details'] = getattr(bm25, 'last_debug', {})
         if retrieval_mode == 'hybrid':
             merged = reciprocal_rank_fusion(vector_results, bm25_results,
                         top_k=max(1,len(vector_results)+len(bm25_results)), rrf_k=RRF_K)
         else:
             merged = vector_results if retrieval_mode=='vector' else bm25_results
         self.last_debug['fused_count'] = len(merged)
+        self.last_debug['fusion_ranking'] = [{'chunk_id': c['chunk_id'], 'document_id': (c.get('metadata') or {}).get('document_id'), 'vector_rank': c.get('vector_rank'), 'bm25_rank': c.get('bm25_rank'), 'rrf_score': c.get('rrf_score')} for c in merged]
         selected = merged[:top_k]
         self.last_debug['top_k_filtered_count'] = len(merged)-len(selected)
         self.last_debug['final_chunks'] = [item['chunk_id'] for item in selected]
@@ -165,7 +173,8 @@ class Retriever:
         for anchor in chunks:
             meta = anchor.get('metadata') or {}
             doc, section, index = meta.get('document_id'), meta.get('section_title'), meta.get('chunk_index')
-            if not doc or not section or not isinstance(index,int):
+            structural = meta.get('structure_id')
+            if not doc or not structural or meta.get('structure_version',0)<2 or not meta.get('structure_reliable') or not isinstance(index,int):
                 continue
             if document_ids and doc not in document_ids:
                 continue
@@ -178,7 +187,8 @@ class Retriever:
             for item in sorted(cache[doc], key=lambda x:x['metadata'].get('chunk_index',-1)):
                 neighbor = item['metadata']
                 neighbor_index = neighbor.get('chunk_index')
-                if (neighbor.get('document_id') != doc or neighbor.get('section_title') != section
+                if (neighbor.get('document_id') != doc or neighbor.get('structure_id') != structural
+                    or neighbor.get('structure_version',0)<2 or not neighbor.get('structure_reliable')
                     or neighbor.get('source_file') != meta.get('source_file')
                     or not isinstance(neighbor_index,int) or abs(neighbor_index-index)!=1
                     or _identity(item) in seen):
@@ -190,6 +200,6 @@ class Retriever:
                 used += len(item['text'])
                 seen.add(_identity(item))
                 self.last_debug['context_expansion'].append({'chunk_id':item['chunk_id'],
-                        'document_id':doc,'expanded_from':anchor['chunk_id'],'reason':'same_section_multi_part_query'})
+                        'document_id':doc,'expanded_from':anchor['chunk_id'],'reason':'same_leaf_structure_multi_part_query'})
         self.last_debug['final_chunks'] = [item['chunk_id'] for item in selected]
         return selected

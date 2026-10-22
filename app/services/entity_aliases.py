@@ -81,22 +81,48 @@ def _alias_pattern(alias: str) -> str:
 
 
 def resolve_aliases(question: str, rows: list[dict]) -> dict:
+    """Resolve explicit names; only an unambiguous subject may constrain scope.
+
+    Several entities are valid in comparison questions. Ambiguous names remain
+    unchanged rather than silently selecting one entity or refusing all retrieval.
+    """
     normalized = normalize_query(question)
     matches = []
     for row in rows:
-        # 优先最长名称，避免短别名覆盖更完整的实体名称。
         names = sorted(set(row['aliases'] + [row['entity_name']]), key=len, reverse=True)
         for name in names:
             alias = normalize_query(name)
-            if alias and re.search(_alias_pattern(alias), normalized):
+            found = re.search(_alias_pattern(alias), normalized) if alias else None
+            if found:
                 matches.append({'document_id': row['document_id'],
-                                'entity_name': row['entity_name'], 'matched_alias': alias})
+                                'entity_name': row['entity_name'], 'matched_alias': alias,
+                                'start': found.start(), 'end': found.end()})
                 break
-    # 同名出现在不同文档时，无法仅凭字符串确定同一人；要求缩小范围。
-    ambiguous = len({item['document_id'] for item in matches}) > 1
+    by_alias = {}
+    for match in matches:
+        by_alias.setdefault(match['matched_alias'], []).append(match)
+    ambiguous_aliases = {alias for alias, group in by_alias.items()
+                         if len({m['document_id'] for m in group}) > 1}
+    usable = [m for m in matches if m['matched_alias'] not in ambiguous_aliases]
+    spans = []
+    for match in sorted(usable, key=lambda m: (-(m['end']-m['start']), m['start'])):
+        if not any(match['start'] < old['end'] and old['start'] < match['end'] for old in spans):
+            spans.append(match)
     expanded = normalized
-    if matches and not ambiguous:
-        match = matches[0]
-        expanded = re.sub(_alias_pattern(match['matched_alias']),
-                          lambda _: normalize_query(match['entity_name']), normalized)
-    return {'query': expanded, 'matches': matches, 'ambiguous': ambiguous}
+    for match in sorted(spans, key=lambda m:m['start'], reverse=True):
+        expanded = expanded[:match['start']] + normalize_query(match['entity_name']) + expanded[match['end']:]
+    subject = len(spans) == 1 and spans[0]['start'] == 0 and not ambiguous_aliases
+    content = expanded
+    constraint_ids = []
+    if subject:
+        name = normalize_query(spans[0]['entity_name'])
+        remainder = re.sub(_alias_pattern(name), '', expanded, count=1).strip()
+        # Preserve names when identity itself is the requested information.
+        identity_only = re.sub(r'\b(?:who|what|is|are|tell|me|about|please)\b|是谁|是什么|介绍|一下|概况|背景|的|[\W_]+', '', remainder).strip() == ''
+        if not identity_only:
+            content = remainder
+            constraint_ids = [spans[0]['document_id']]
+    return {'query': expanded, 'content_query': content,
+            'matches': matches, 'ambiguous': bool(ambiguous_aliases),
+            'ambiguous_aliases': sorted(ambiguous_aliases),
+            'constraint_document_ids': constraint_ids}

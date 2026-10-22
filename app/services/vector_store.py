@@ -54,7 +54,14 @@ class VectorStore:
         entity = get_document_aliases(document_id).get('entity_name') if document_id else None
         for chunk in chunks:
             metadata = {'source_file': chunk.source_file, 'start_index': chunk.start_index,
-                        'end_index': chunk.end_index, 'chunk_index': chunk.chunk_index}
+                        'end_index': chunk.end_index, 'chunk_index': chunk.chunk_index,
+                        'structure_version': chunk.structure_version, 'structure_reliable': chunk.structure_reliable}
+            if chunk.section_path:
+                metadata['section_path'] = json.dumps(chunk.section_path, ensure_ascii=False)
+                metadata['structure_id'] = chunk.structure_id
+            if chunk.subsection_title:
+                metadata['subsection_title'] = chunk.subsection_title
+                metadata['parent_section'] = chunk.section_path[-2]
             if document_id is not None:
                 metadata['document_id'] = document_id
             if chunk.section_title is not None:
@@ -67,10 +74,10 @@ class VectorStore:
                 metadata['page_start'], metadata['page_end'] = chunk.page_range
             prepared['ids'].append(chunk.chunk_id)
             prepared['documents'].append(chunk.text)
-            embedding_input = chunk.text
+            embedding_input = ('Section: ' + ' > '.join(chunk.section_path) + '\n' if chunk.section_path else '') + chunk.text
             if entity:
                 metadata['entity_name'] = entity
-                embedding_input = f'Entity: {entity}\n{chunk.text}'
+                embedding_input = f'Entity: {entity}\n{embedding_input}'
             prepared['embeddings'].append(embed_text(embedding_input))
             prepared['metadatas'].append(metadata)
         return prepared

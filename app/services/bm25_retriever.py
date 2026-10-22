@@ -19,7 +19,8 @@ CHINESE_PATTERN = re.compile(r"[\u4e00-\u9fff]+")
 def tokenize(text: str) -> list[str]:
     """Tokenize English identifiers and Chinese text without a heavy dependency."""
     normalized = normalize_query(text)
-    tokens = IDENTIFIER_PATTERN.findall(normalized)
+    tokens = [token.rstrip(".:-") for token in IDENTIFIER_PATTERN.findall(normalized)]
+    tokens = [token for token in tokens if token]
     for sequence in CHINESE_PATTERN.findall(normalized):
         if len(sequence) == 1:
             tokens.append(sequence)
@@ -97,21 +98,26 @@ class BM25Retriever:
         document_ids: list[str] | None = None,
         source_files: list[str] | None = None,
     ) -> list[dict]:
-        query_tokens = tokenize(question)
+        query_tokens = list(dict.fromkeys(token for token in tokenize(question) if token not in {"the", "a", "an", "is", "are", "of", "for", "to", "in", "on", "and", "how", "what", "which", "does", "do", "can", "please", "什么", "哪些", "如何", "请问"}))
+        self.last_debug = {"query_terms": query_tokens, "candidates": [], "filtered": []}
+        identifier_terms = [term for term in query_tokens if "_" in term or (re.search(r"\d",term) and re.search(r"[-.:]",term))]
+        self.last_debug["identifier_terms"] = identifier_terms
         if not query_tokens:
+            self.last_debug["empty_reason"] = "no_effective_query_terms"
             return []
 
         try:
             chunks = self._load_chunks(document_ids, source_files)
-        except Exception:
-            logger.exception("Failed to load chunks for BM25 index.")
-            return []
+        except Exception as exc:
+            self.last_debug["error"] = type(exc).__name__
+            logger.warning("BM25 load failed: type=%s", type(exc).__name__)
+            raise RuntimeError("BM25 index could not be read") from None
 
         if not chunks:
             logger.info("BM25 query skipped because the filtered index is empty.")
             return []
 
-        tokenized = [tokenize((chunk["metadata"].get("entity_name") or "") + "\n" + chunk["text"]) for chunk in chunks]
+        tokenized = [tokenize(chunk["text"]) for chunk in chunks]
         lengths = [len(tokens) for tokens in tokenized]
         average_length = sum(lengths) / len(lengths) if lengths else 0.0
         if average_length == 0:
@@ -141,8 +147,12 @@ class BM25Retriever:
                     * (self.k1 + 1)
                     / denominator
                 )
-            if score > 0:
-                scored.append((score, chunk))
+            matched = [token for token in query_tokens if frequencies.get(token, 0)]
+            identifier_match = not identifier_terms or bool(set(identifier_terms) & set(matched))
+            if score > 0 and matched and identifier_match:
+                scored.append((score, {**chunk, "matched_terms": matched, "content_match": True}))
+            else:
+                self.last_debug["filtered"].append({"chunk_id": chunk["chunk_id"], "reason": "identifier_not_matched" if not identifier_match else "no_body_term_match"})
 
         scored.sort(key=lambda item: (-item[0], item[1]["metadata"].get("document_id", ""), item[1]["chunk_id"]))
         results = []
@@ -161,6 +171,10 @@ class BM25Retriever:
                     "distance": None,
                 }
             )
+
+        self.last_debug["candidates"] = [{"chunk_id": r["chunk_id"], "document_id": r["metadata"].get("document_id"), "rank": r["rank"], "score": r["bm25_score"], "matched_terms": r["matched_terms"], "content_match": True} for r in results]
+        if not results:
+            self.last_debug["empty_reason"] = "no_effective_lexical_match"
 
         logger.info(
             "BM25 query finished: top_k=%s candidates=%s results=%s",

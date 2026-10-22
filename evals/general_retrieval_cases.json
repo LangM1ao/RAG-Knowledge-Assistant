@@ -1,0 +1,321 @@
+{
+  "version": 1,
+  "aliases": {
+    "en_database.txt": {
+      "entity_name": "Orion Systems",
+      "aliases": [
+        "猎户系统"
+      ]
+    },
+    "portfolio.txt": {
+      "entity_name": "Atlas Engineering",
+      "aliases": [
+        "星图工程"
+      ]
+    },
+    "lyra_platform.txt": {
+      "entity_name": "Lyra Tools",
+      "aliases": [
+        "天琴工具"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "g01",
+      "question_type": "A_zh_zh",
+      "question": "员工每周最多可以远程办公几天？",
+      "expected_source": "cn_policy.txt",
+      "expected_evidence": [
+        "远程办公两天"
+      ],
+      "should_refuse": false,
+      "qa": true,
+      "answer_terms": [
+        "两天",
+        "2天"
+      ]
+    },
+    {
+      "id": "g02",
+      "question_type": "B_en_en",
+      "question": "How does the database platform improve query performance?",
+      "expected_source": "en_database.txt",
+      "expected_evidence": [
+        "composite indexes",
+        "EXPLAIN"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g03",
+      "question_type": "C_zh_en",
+      "question": "系统通过哪些方法提高数据库查询性能？",
+      "expected_source": "en_database.txt",
+      "expected_evidence": [
+        "composite indexes",
+        "EXPLAIN"
+      ],
+      "should_refuse": false,
+      "document_ids": [
+        "en_database.txt"
+      ],
+      "qa": true,
+      "answer_terms": [
+        "索引",
+        "index"
+      ]
+    },
+    {
+      "id": "g04",
+      "question_type": "D_en_zh",
+      "question": "How should the service recover after repeated connection failures?",
+      "expected_source": "cn_operations.txt",
+      "expected_evidence": [
+        "熔断保护",
+        "指数退避"
+      ],
+      "should_refuse": false,
+      "qa": true,
+      "answer_terms": [
+        "退避",
+        "backoff"
+      ]
+    },
+    {
+      "id": "g05",
+      "question_type": "E_sections",
+      "question": "运行日志应该保留多久？",
+      "expected_source": "cn_operations.txt",
+      "expected_evidence": [
+        "运行日志保留14天"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g06",
+      "question_type": "F_projects",
+      "question": "星图工程在数据库查询性能优化项目中使用了哪些技术？",
+      "expected_source": "portfolio.txt",
+      "expected_evidence": [
+        "composite indexes",
+        "EXPLAIN"
+      ],
+      "should_refuse": false,
+      "qa": true,
+      "answer_terms": [
+        "索引",
+        "index"
+      ],
+      "forbidden_terms": [
+        "rolling averages",
+        "滚动平均"
+      ]
+    },
+    {
+      "id": "g07",
+      "question_type": "G_repeated_identity",
+      "question": "Atlas Engineering 如何提高数据库查询性能？",
+      "expected_source": "portfolio.txt",
+      "expected_evidence": [
+        "composite indexes",
+        "EXPLAIN"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g08",
+      "question_type": "H_fusion",
+      "question": "星图工程在数据库查询优化项目中做了什么？",
+      "expected_source": "portfolio.txt",
+      "expected_evidence": [
+        "composite indexes"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g09",
+      "question_type": "I_exact_identifier",
+      "question": "What does ERR_STORAGE_204 mean?",
+      "expected_source": "mixed_product.txt",
+      "expected_evidence": [
+        "storage quota has been exceeded"
+      ],
+      "should_refuse": false,
+      "qa": true,
+      "answer_terms": [
+        "配额",
+        "quota"
+      ]
+    },
+    {
+      "id": "g10",
+      "question_type": "I_exact_identifier",
+      "question": "API_TIMEOUT_MS 默认是多少？",
+      "expected_source": "mixed_product.txt",
+      "expected_evidence": [
+        "30000毫秒"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g11",
+      "question_type": "J_unanswerable",
+      "question": "What is the secret access password SATURN_PRIVATE_998? ",
+      "expected_source": null,
+      "expected_evidence": [],
+      "should_refuse": true,
+      "qa": true,
+      "answer_terms": []
+    },
+    {
+      "id": "g12",
+      "question_type": "K_scope",
+      "question": "How many days can staff work remotely each week?",
+      "expected_source": "partner_policy.txt",
+      "expected_evidence": [
+        "three days"
+      ],
+      "should_refuse": false,
+      "document_ids": [
+        "partner_policy.txt"
+      ]
+    },
+    {
+      "id": "g13",
+      "question_type": "K_scope",
+      "question": "员工最多可远程办公多少天？",
+      "expected_source": "cn_policy.txt",
+      "expected_evidence": [
+        "远程办公两天"
+      ],
+      "should_refuse": false,
+      "source_files": [
+        "cn_policy.txt"
+      ]
+    },
+    {
+      "id": "g14",
+      "question_type": "L_citation",
+      "question": "普通报销需要在费用发生后多长时间内提交？",
+      "expected_source": "cn_policy.txt",
+      "expected_evidence": [
+        "30天内提交"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g15",
+      "question_type": "mixed_language",
+      "question": "Storage Gateway 出现 ERR_STORAGE_204 应该怎么办？",
+      "expected_source": "mixed_product.txt",
+      "expected_evidence": [
+        "clear unused objects before retrying"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g16",
+      "question_type": "multi_entity",
+      "question": "比较猎户系统和天琴工具如何优化数据库读取性能。",
+      "expected_source": "en_database.txt",
+      "expected_evidence": [
+        "composite indexes"
+      ],
+      "should_refuse": false,
+      "expected_sources": [
+        "en_database.txt",
+        "lyra_platform.txt"
+      ],
+      "evidence_groups": [
+        {
+          "source": "en_database.txt",
+          "text": "composite indexes"
+        },
+        {
+          "source": "lyra_platform.txt",
+          "text": "Redis cache"
+        }
+      ]
+    },
+    {
+      "id": "g17",
+      "question_type": "F_projects",
+      "question": "Which techniques are used in Warehouse Forecasting Pilot?",
+      "expected_source": "portfolio.txt",
+      "expected_evidence": [
+        "Python and rolling averages"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g18",
+      "question_type": "E_plain",
+      "question": "设备交接如何才能标记完成？",
+      "expected_source": "plain_notes.txt",
+      "expected_evidence": [
+        "接收人签字确认"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g19",
+      "question_type": "C_zh_en",
+      "question": "数据库备份和恢复验证的频率分别是什么？",
+      "expected_source": "en_database.txt",
+      "expected_evidence": [
+        "nightly snapshots",
+        "every month"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g20",
+      "question_type": "D_en_zh",
+      "question": "How long are operational logs retained?",
+      "expected_source": "cn_operations.txt",
+      "expected_evidence": [
+        "运行日志保留14天"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g21",
+      "question_type": "mixed_language",
+      "question": "Orion Systems 怎样用 EXPLAIN 检查查询？",
+      "expected_source": "en_database.txt",
+      "expected_evidence": [
+        "EXPLAIN to inspect query plans"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g22",
+      "question_type": "J_unanswerable",
+      "question": "员工的私人银行卡密码是多少？",
+      "expected_source": null,
+      "expected_evidence": [],
+      "should_refuse": true
+    },
+    {
+      "id": "g23",
+      "question_type": "I_exact_identifier",
+      "question": "Redis cache expiry in Lyra Tools?",
+      "expected_source": "lyra_platform.txt",
+      "expected_evidence": [
+        "five minute expiry"
+      ],
+      "should_refuse": false
+    },
+    {
+      "id": "g24",
+      "question_type": "G_repeated_identity",
+      "question": "星图工程 查询性能优化 使用的索引方法是什么？",
+      "expected_source": "portfolio.txt",
+      "expected_evidence": [
+        "composite indexes"
+      ],
+      "should_refuse": false
+    }
+  ]
+}

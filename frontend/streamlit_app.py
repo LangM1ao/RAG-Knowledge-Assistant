@@ -249,3 +249,12 @@ else:
             st.markdown("**回答**")
             st.write(record.get("answer", ""))
             st.caption(f"引用数量：{len(record.get('sources') or [])}")
+            saved = record.get('metadata')
+            if saved:
+                settings = saved.get('settings') or {}
+                outcome = saved.get('outcome') or {}
+                status = (saved.get('verification') or {}).get('status')
+                st.caption(f"当次模式：{settings.get('retrieval_mode', '未记录')}｜Top-K：{settings.get('top_k', '未记录')}｜最大距离：{settings.get('max_distance', '未启用')}")
+                st.caption(f"当次校验：{status or '未记录'}｜结束阶段：{outcome.get('stage', '未记录')}")
+            else:
+                st.caption("旧记录未保存当次检索配置和校验状态。")

@@ -1,0 +1,3 @@
+# Lyra Platform
+## Query Performance
+Lyra Tools improves database read performance using a Redis cache with a five minute expiry. Index creation is outside the scope of this service.

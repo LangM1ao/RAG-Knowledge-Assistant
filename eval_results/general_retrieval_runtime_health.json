@@ -1,0 +1,22 @@
+{
+  "api": {
+    "status": 200,
+    "body": "{\"status\":\"ok\",\"service\":\"RAG Knowledge Base Assistant\"}"
+  },
+  "frontend": {
+    "status": 200,
+    "body": "ok"
+  },
+  "documents": [
+    {
+      "document_id": "42c4c214-7899-4aff-9ed1-919af11c7609",
+      "chunk_count": 24,
+      "status": "indexed"
+    }
+  ],
+  "history": {
+    "rows_returned": 9,
+    "legacy_metadata_unknown": 9,
+    "saved_trace_exposed": false
+  }
+}

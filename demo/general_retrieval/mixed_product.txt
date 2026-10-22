@@ -1,0 +1,5 @@
+# Storage Gateway Guide
+## API Settings
+API_TIMEOUT_MS 的默认值是30000毫秒。ERR_STORAGE_204 indicates that the storage quota has been exceeded; clear unused objects before retrying.
+## Access Control
+请求必须携带已授权的访问令牌，禁止把令牌写入普通日志。

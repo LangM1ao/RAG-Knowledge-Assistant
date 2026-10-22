@@ -1,3 +1,4 @@
+from copy import deepcopy
 from fastapi import APIRouter, HTTPException, Query
 
 from app.core import config
@@ -30,10 +31,14 @@ def query_knowledge_base(request: ChatQueryRequest):
         logger.warning("Chat request failed: type=%s", type(exc).__name__)
         raise HTTPException(status_code=500, detail="问答服务暂时不可用，请稍后重试。") from None
 
+    metadata = deepcopy(result.get("run_metadata"))
+    if metadata and not (config.RETRIEVAL_DEBUG_ENABLED and request.debug and result.get("debug_enabled")):
+        metadata.pop("trace", None)
     create_chat_record(
         question=request.question,
         answer=result["answer"],
         sources=result["sources"],
+        metadata=metadata,
     )
 
     response = {
@@ -41,6 +46,7 @@ def query_knowledge_base(request: ChatQueryRequest):
         "answer": result["answer"],
         "sources": result["sources"],
         "verification": result.get("verification"),
+        "run_metadata": metadata,
         "retrieval_mode": result.get(
             "retrieval_mode",
             request.retrieval_mode,
@@ -56,5 +62,10 @@ def query_knowledge_base(request: ChatQueryRequest):
 
 
 @router.get("/history")
-def get_chat_history(limit: int = Query(default=10, ge=1, le=100)):
-    return {"history": list_chat_records(limit=limit)}
+def get_chat_history(limit: int = Query(default=10, ge=1, le=100), include_debug: bool = False):
+    rows = deepcopy(list_chat_records(limit=limit))
+    if not (config.RETRIEVAL_DEBUG_ENABLED and include_debug):
+        for row in rows:
+            if row.get('metadata'):
+                row['metadata'].pop('trace', None)
+    return {'history': rows}

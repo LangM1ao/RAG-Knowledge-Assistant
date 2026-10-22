@@ -72,3 +72,20 @@ Git 本地历史只有四条：
 完整总结/教学/代码附件：https://app.notion.com/p/4018cdeeb95a81e98719ef6fbc89a92c
 
 已追加既有V1.5总入口、07 Bad Case Analysis、18 Troubleshooting Guide、19 Interview Project Guide，并复核更新。保留其历史108题/性能记录，本轮133测试和26题是另一范围，不能混用。相关当前进度清单也已追加。
+
+
+## 2026-10-22 后续：通用检索机制修复（当前状态）
+
+上文“本次未审计/未提交/尚未实现”等是初始审计时间的结论，不能当作当前状态。上一阶段已独立提交9a4b275和1d39989；本轮从干净1d39989开始，分支codex/general-retrieval-fix，不覆盖已有本地修改。
+
+- 用户新截图：中文项目描述拒答、英文项目名可答。实际根因是实体metadata污染BM25并改变RRF，不是所有跨语言已经解决。
+- 本轮总结：docs/general_retrieval_upgrade_20261022.md；对照：eval_results/general_retrieval_comparison.md；教程：docs/general_retrieval_tutorial.md；17个模块完整最终代码及逐行中文导读：docs/general_retrieval_code_walkthrough.md。
+- 133项基线→151项通过；8份24题三模式原始JSON保留；QA全量抽样和针对性补测明确分开，保留BM25下降、Hybrid一次无关引用和漏做实体重建的失败报告。
+- 最终镜像27/27真实合成验收，HTTP与Docker健康。完整Docker数据、源码zip及Git bundle事先保存于backups/general_retrieval_20261022/；本轮只重建已授权确切文档，不扩大私人数据外发。
+- 新历史保存检索参数和校验；旧9条不伪造。实际日常操作：修改标准实体名后需重建。生产原文件没有修改。
+- 重要历史阶段多数有记录，但初始提交捆绑多个阶段，仍不能保证过去“每一次”更新都有独立日志。本地Git不等于远端备份，当前没有remote。
+
+Notion本轮继续更新既有V1.5笔记下的第22章，并向原Bad Case、Troubleshooting、Interview、总览追加入口。旧第21章保留为前一阶段快照；与本轮24题指标不能混用，也不改写旧108题/异步性能等未核实范围。
+
+
+本轮Notion保存入口：[第22章：通用检索修复、复盘和完整代码](https://app.notion.com/p/4018cdeeb95a8144be31d5b3e0e51af9)。总结与四份代码附件，以及原Bad Case/排错/面试/总览入口已回读确认。

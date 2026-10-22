@@ -1,0 +1,30 @@
+PORTFOLIO
+Query Efficiency Review                               01/2025 - 02/2025
+• The engineering team improved database query speed with composite indexes and EXPLAIN query plan analysis. They compared execution plans before choosing the index layout.
+• A controlled load test verified lower query latency while preserving transaction correctness.
+Warehouse Forecasting Pilot                           03/2025 - 04/2025
+• The team forecast warehouse demand with Python and rolling averages. This project did not change database indexes.
+## Unrelated Facility 0
+Facility 0 uses routine maintenance checks.
+## Unrelated Facility 1
+Facility 1 uses routine maintenance checks.
+## Unrelated Facility 2
+Facility 2 uses routine maintenance checks.
+## Unrelated Facility 3
+Facility 3 uses routine maintenance checks.
+## Unrelated Facility 4
+Facility 4 uses routine maintenance checks.
+## Unrelated Facility 5
+Facility 5 uses routine maintenance checks.
+## Unrelated Facility 6
+Facility 6 uses routine maintenance checks.
+## Unrelated Facility 7
+Facility 7 uses routine maintenance checks.
+## Unrelated Facility 8
+Facility 8 uses routine maintenance checks.
+## Unrelated Facility 9
+Facility 9 uses routine maintenance checks.
+## Unrelated Facility 10
+Facility 10 uses routine maintenance checks.
+## Unrelated Facility 11
+Facility 11 uses routine maintenance checks.

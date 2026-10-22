@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import closing
 
 from app.core.config import METADATA_DB_PATH
 
@@ -11,7 +12,8 @@ def get_connection():
 
 
 def init_db():
-    with get_connection() as connection:
+    with closing(get_connection()) as connection, connection:
+        connection.execute("BEGIN IMMEDIATE")
         connection.execute(
             """
             CREATE TABLE IF NOT EXISTS documents (
@@ -39,4 +41,7 @@ def init_db():
             )
             """
         )
+        columns = {row[1] for row in connection.execute("PRAGMA table_info(chat_history)")}
+        if "metadata_json" not in columns:
+            connection.execute("ALTER TABLE chat_history ADD COLUMN metadata_json TEXT")
         connection.commit()

@@ -426,7 +426,7 @@ cd path\to\rag_knowledge_assistant
 - 只支持 TXT 和基础 PDF 文本解析，不支持复杂表格与版面理解。
 - 上传和 embedding 是同步流程，大文件会阻塞请求。
 - 没有登录、权限、多租户和审计系统。
-- 当前固定检索评估为26题和3份短合成demo，不是生产级评估体系。
+- 历史Week11基准26题/3份demo；本轮另有8份文档24题通用基准，均不是生产级评估体系。
 - answer accuracy 为单人逐题复核，没有多人标注一致性。
 - 已实现 BM25 与 Hybrid/RRF；未实现外部 rerank。
 - 依赖外部 Embedding 与 LLM API，受网络、配额和费用影响。
@@ -442,7 +442,7 @@ cd path\to\rag_knowledge_assistant
 - 架构说明见 `docs/architecture.md`。
 
 
-## Retrieval Quality Upgrade（2026-10-22）
+## Retrieval Quality Upgrade（2026-10-22，上一阶段历史快照）
 
 使用结构优先字符分块、真实页码/offset、SQLite显式文档别名和实体Embedding上下文。原文仍保存原样，别名只确认身份。新增同文档同章节的有界邻块、部分回答、实际引用筛选、可恢复索引重建。
 
@@ -456,3 +456,25 @@ cd path\to\rag_knowledge_assistant
 - 已上传的真实简历已重建。其他旧文档点“重建文档”升级，保持原始文件与document_id，不清空Chroma。
 
 学习笔记同步到 [Notion检索升级复盘](https://app.notion.com/p/4018cdeeb95a81e98719ef6fbc89a92c)。
+
+
+## 通用检索机制升级（2026-10-22，当前实现）
+
+[完整总结与文件职责](docs/general_retrieval_upgrade_20261022.md) · [真实前后评估](eval_results/general_retrieval_comparison.md) · [零基础教程](docs/general_retrieval_tutorial.md) · [最终源码与逐行中文导读](docs/general_retrieval_code_walkthrough.md)
+
+- BM25只索引真实正文，登记身份/文件名不再作为虚假相关性；保留正文实体名、中文双字词和完整英文编号。query含技术编号时，候选须至少匹配一个明确编号。
+- 原问题、规范化问题、语义query与内容query分开；多个实体保留，歧义不猜；显式文档/来源范围不会被扩大或随意缩窄。登记别名不是自动翻译或权限系统。
+- Vector承担跨语言语义匹配；BM25没有有效词项时不投票。Hybrid仍按RRF有效排名融合，不无条件优先Vector。候选池8/路、TopK3、最大cosine距离0.60保持；距离越小越相似。
+- 通用结构层级与叶ID区分同名/相邻独立项目。邻块只扩同文档、同来源、同可靠叶ID；旧结构和无可靠标题时不扩展。正文、页码、字符偏移仍保留。
+- 保存或修改实体标准名后点“重建文档”，让向量带上新身份上下文；不降低阈值替代重建。先备份再安全重建，保持原文件和document_id。
+- 新历史metadata记录当时模式、TopK、最大距离、校验与结束阶段；旧历史不补造状态。GET /chat/history原参数兼容；include_debug=true只有配合服务端RETRIEVAL_DEBUG_ENABLED=true才读取已保存trace。新问答诊断仍要服务端开关与debug=true，默认关闭。
+- 答案校验没有放宽。检索为空、生成拒答、引用错误、校验失败分别记录。校验PASS不等于检索完整或所有请求已回答。
+- 151项自动化通过；8份24题三模式实测。Vector/Hybrid证据召回达到本套小语料100%，BM25来源命中指标下降原因和失败样本详见报告，不能解读为所有未知问题都完全解决。
+- 最终Docker真实合成验收27/27；保存实体后漏重建的初次失败报告也保留。生产现有已授权文档已重建24块，9条旧历史保持未知。当前可打开 http://127.0.0.1:8501 。
+
+复现检索：python -m evals.run_general_retrieval --stage after --run-id new_run；加--with-answers才运行选定真实答案。评估使用隔离SQLite/Chroma与非私人语料，会使用现有OpenAI API；run-id不可重复覆盖。缓存延迟不是生产性能。
+
+本轮不引入翻译/reranker/新框架；下一阶段可转向登录、权限和多用户知识库隔离。所有历史记录入口及备份范围见[保存审计](docs/change_history.md)。
+
+
+本轮Notion保存入口：[第22章：通用检索修复、复盘和完整代码](https://app.notion.com/p/4018cdeeb95a8144be31d5b3e0e51af9)。总结与四份代码附件，以及原Bad Case/排错/面试/总览入口已回读确认。
