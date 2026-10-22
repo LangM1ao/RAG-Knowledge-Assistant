@@ -1,4 +1,12 @@
+from app.core.config import ANSWER_VERIFICATION_ENABLED
 from app.core.logging_config import get_logger
+from app.services.answer_verifier import (
+    AnswerVerificationError,
+    VERIFICATION_REFUSAL,
+    VERIFICATION_UNAVAILABLE,
+    is_explicit_refusal,
+    verify_answer,
+)
 from app.services.llm_client import generate_answer
 from app.services.retriever import Retriever
 from app.services.vector_store import VectorStore
@@ -38,6 +46,8 @@ def answer_question(
         question,
         top_k,
     )
+
+    logger.info("Answer verification enabled=%s", ANSWER_VERIFICATION_ENABLED)
 
     store = VectorStore()
 
@@ -99,11 +109,50 @@ def answer_question(
         len(chunks),
     )
 
+    if ANSWER_VERIFICATION_ENABLED:
+        messages[0]["content"] += (
+            "如果依据不足，请只回复：根据当前知识库资料，无法确定该问题的答案。"
+            "拒答时不要添加猜测、额外事实或引用列表。"
+        )
+
     answer = generate_answer(messages)
 
     logger.info(
         "Answer generated successfully."
     )
+
+    verification = {"status": "DISABLED"}
+    if ANSWER_VERIFICATION_ENABLED:
+        if not isinstance(answer, str) or not answer.strip():
+            logger.warning("Empty generated answer; returning verification service error")
+            return {
+                "answer": VERIFICATION_UNAVAILABLE,
+                "sources": [],
+                "retrieval_mode": retrieval_mode,
+                "verification": {"status": "ERROR"},
+            }
+        if is_explicit_refusal(answer):
+            verification = {"status": "SKIPPED"}
+            logger.info("Answer verification skipped: generator already refused")
+        else:
+            try:
+                checked = verify_answer(question, context, answer)
+            except AnswerVerificationError:
+                return {
+                    "answer": VERIFICATION_UNAVAILABLE,
+                    "sources": [],
+                    "retrieval_mode": retrieval_mode,
+                    "verification": {"status": "ERROR"},
+                }
+            verification = {"status": checked.verdict}
+            if checked.verdict == "FAIL":
+                # 不返回原答案或其来源，避免把无依据答案存入历史或展示给用户。
+                return {
+                    "answer": VERIFICATION_REFUSAL,
+                    "sources": [],
+                    "retrieval_mode": retrieval_mode,
+                    "verification": verification,
+                }
 
     sources = [
         {
@@ -128,4 +177,5 @@ def answer_question(
         "sources": sources,
         "retrieval_mode": retrieval_mode,
         "retrieval_debug": sources,
+        "verification": verification,
     }

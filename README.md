@@ -16,6 +16,7 @@
 - FastAPI 文档列表、详情、删除和重建接口
 - SQLite 文档 metadata 与问答历史持久化
 - RAG 回答、引用来源、chunk preview 和无依据提示
+- 默认启用 LLM 二次答案依据校验，结构化 PASS / FAIL 与安全异常处理
 - Streamlit 文档上传、管理、问答、引用和历史页面
 - 固定 26 题合成评估集、Hit Rate@K、Recall@K、MRR、拒答与延迟评估
 - chunk_size / overlap / top_k / cosine threshold 参数实验
@@ -51,7 +52,8 @@ FastAPI 后端（接口与业务调度）
        │    ├─ vector_store → vector candidates
        │    ├─ bm25_retriever → sparse candidates
        │    └─ RRF → final top-k chunks
-       ├─ llm_client → answer
+       ├─ llm_client → draft answer
+       ├─ answer_verifier → PASS / FAIL / service error
        └─ chat_repository → SQLite chat_history
 ```
 
@@ -75,8 +77,24 @@ question → Retriever
   ├─ vector：query embedding → ChromaDB cosine
   ├─ bm25：tokenize → BM25 score
   └─ hybrid：两路候选 → RRF → 去重后的 final top-k
-→ context → LLM → answer + sources → SQLite history
+→ context（无片段则直接拒答）→ LLM 生成答案
+→ Answer Verification → PASS 返回原答案与 sources / FAIL 拒答 / ERROR 服务提示
+→ SQLite history（只保存最终返回的答案）
 ```
+
+## Answer Verification（答案依据校验）
+
+生成答案后，第二次调用同一个配置的 LLM，检查答案是否得到**生成时同一份 context** 支持。资料相关不代表答案有依据，例如资料只说明“经理审批”，不能支持“报销上限 5000 元”。检索算法、距离阈值和 RRF 排序保持原样。
+
+- `PASS`：返回原答案，保留原有来源。
+- `FAIL`：替换为“根据当前知识库资料，无法确定该问题的答案。”，清空来源，不返回原答案。
+- API 失败、30 秒超时、模型拒绝校验、未知 verdict 或格式错误：返回“答案校验暂时不可用，请稍后重试。”，不把技术故障说成资料不足。
+- 检索无结果时直接沿用原拒答；生成结果是固定的纯拒答语时跳过校验。非固定措辞仍校验，避免一句拒答后夹带猜测绕过检查。
+- SDK 使用严格 JSON Schema，Pydantic 验证 `verdict` 和非空 `reason`，不靠查找 PASS 字样判断。
+
+`ANSWER_VERIFICATION_ENABLED` 默认 `true`，无需修改已有 `.env` 即可开启。设为 `false` 并重启后端可恢复原生成流程。Docker Compose 传递该变量；portable Compose 已通过 `env_file: .env` 传递。页面显示校验状态；既有 SQLite 表结构不变，历史保存最终答案与来源，不单独保存校验状态。
+
+每个需要校验的回答多一次 LLM 调用，增加 Token 消耗和响应时间；固定拒答不额外调用。二次模型判断仍可能误判，只能降低风险，不能保证完全消除幻觉。原有检索评估 CSV 不代表新校验功能的准确率；本次测试与手动验证见 [答案校验说明](docs/answer_verification.md)。
 
 ## Why Hybrid Retrieval
 
@@ -150,6 +168,7 @@ rag_knowledge_assistant/
       vector_store.py
       document_service.py
       rag_pipeline.py
+      answer_verifier.py
       llm_client.py
   frontend/
     __init__.py

@@ -34,6 +34,7 @@ def query_knowledge_base(request: ChatQueryRequest):
         "question": request.question,
         "answer": result["answer"],
         "sources": result["sources"],
+        "verification": result.get("verification"),
         "retrieval_mode": result.get(
             "retrieval_mode",
             request.retrieval_mode,

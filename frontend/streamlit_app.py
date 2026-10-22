@@ -161,10 +161,24 @@ if result:
     st.caption(f"检索模式：{result.get('retrieval_mode', retrieval_mode)}")
     st.caption(f"响应时间：{result.get('elapsed_seconds', 0):.2f} 秒")
 
+    verification_status = (result.get("verification") or {}).get("status")
+    verification_labels = {
+        "PASS": "通过",
+        "FAIL": "未通过，已拒答",
+        "ERROR": "校验服务暂时不可用",
+        "SKIPPED": "模型已拒答，跳过校验",
+        "DISABLED": "已关闭",
+    }
+    if verification_status in verification_labels:
+        st.caption(f"答案依据校验：{verification_labels[verification_status]}")
+
     sources = result.get("sources") or []
     st.markdown("### 引用来源")
     if not sources:
-        st.warning("知识库中未找到可靠依据。")
+        if verification_status == "ERROR":
+            st.warning("校验服务暂时不可用，未展示未经校验的答案。")
+        else:
+            st.warning("知识库中未找到可靠依据。")
     else:
         for index, source in enumerate(sources, start=1):
             distance = source.get("distance")

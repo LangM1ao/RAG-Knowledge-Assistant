@@ -7,6 +7,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
       LLM_MODEL: ${LLM_MODEL:-gpt-5.5}
+      ANSWER_VERIFICATION_ENABLED: ${ANSWER_VERIFICATION_ENABLED:-true}
       UPLOAD_DIR: data/uploads
       CHROMA_DB_DIR: data/chroma_db
       METADATA_DB_PATH: data/metadata.db

@@ -24,3 +24,8 @@ DEFAULT_RETRIEVAL_MODE = os.getenv("DEFAULT_RETRIEVAL_MODE", "vector")
 VECTOR_CANDIDATE_K = int(os.getenv("VECTOR_CANDIDATE_K", "8"))
 BM25_CANDIDATE_K = int(os.getenv("BM25_CANDIDATE_K", "8"))
 RRF_K = int(os.getenv("RRF_K", "60"))
+
+# 默认启用答案依据校验；设为 false 可恢复原有问答流程。
+ANSWER_VERIFICATION_ENABLED = os.getenv("ANSWER_VERIFICATION_ENABLED", "true").strip().lower() in {
+    "true", "1", "yes", "on"
+}
