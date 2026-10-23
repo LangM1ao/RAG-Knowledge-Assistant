@@ -9,3 +9,6 @@ openai
 requests
 streamlit
 pytest
+
+PyJWT>=2.10,<3
+argon2-cffi>=23.1,<26

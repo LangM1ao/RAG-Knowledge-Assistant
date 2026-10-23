@@ -56,7 +56,7 @@ def list_aliases(document_ids=None, source_files=None) -> list[dict]:
         {'document_id': row['document_id'], 'source_file': row['filename'],
          'entity_name': row['entity_name'], 'aliases': json.loads(row['aliases_json'])}
         for row in rows
-        if (not document_ids or row['document_id'] in document_ids)
+        if (document_ids is None or row['document_id'] in document_ids)
         and (not source_files or row['filename'] in source_files)
     ]
 

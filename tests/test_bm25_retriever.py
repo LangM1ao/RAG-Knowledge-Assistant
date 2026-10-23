@@ -5,7 +5,7 @@ class FakeCollection:
     def __init__(self, records):
         self.records = records
 
-    def get(self, include=None):
+    def get(self, include=None, where=None):
         return {
             "ids": [record["chunk_id"] for record in self.records],
             "documents": [record["text"] for record in self.records],

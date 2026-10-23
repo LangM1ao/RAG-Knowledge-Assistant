@@ -121,15 +121,21 @@ def answer_question(
 ) -> dict:
     # Ordinary logs contain operational counts only, never questions or source text.
     logger.info("Answering question: mode=%s top_k=%s verification=%s", retrieval_mode, top_k, ANSWER_VERIFICATION_ENABLED)
+    if document_ids is not None and not any(document_ids):
+        return {"answer": "当前没有可访问的相关文档，因此无法回答。", "sources": [],
+                "verification": {"status": "SKIPPED"}, "retrieval_mode": retrieval_mode,
+                "citation_status": "none", "debug_enabled": False}
     retriever = Retriever(vector_store=VectorStore())
     query_kwargs = {"question": question, "top_k": top_k}
     if similarity_threshold is not None:
         query_kwargs["similarity_threshold"] = similarity_threshold
-    if document_ids:
+    if document_ids is not None:
         query_kwargs["document_ids"] = document_ids
     if source_files:
         query_kwargs["source_files"] = source_files
     chunks = retriever.query(retrieval_mode=retrieval_mode, **query_kwargs)
+    if document_ids is not None:
+        chunks = [c for c in chunks if (c.get("metadata") or {}).get("document_id") in document_ids]
     retrieved_count = len(chunks)
     generation_returned = False
     verification_executed = False
@@ -137,6 +143,8 @@ def answer_question(
         chunks = retriever.expand_context(
             question, chunks, document_ids=document_ids, source_files=source_files,
         )
+    if document_ids is not None:
+        chunks = [c for c in chunks if (c.get("metadata") or {}).get("document_id") in document_ids]
     trace = getattr(retriever, "last_debug", None) or {}
     chunks, context, context_filtered = _bounded_context(chunks, trace.get("alias_matches", []))
     debug_enabled = bool(RETRIEVAL_DEBUG_ENABLED and debug)

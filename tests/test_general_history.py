@@ -22,9 +22,9 @@ def test_old_history_migrates_without_inventing_status(tmp_path,monkeypatch):
     assert rows[1]['metadata'] is None
 
 
-def test_history_trace_hidden_by_default_and_requires_server_flag(monkeypatch):
+def test_history_trace_hidden_by_default_and_requires_server_flag(legacy_api_identity, monkeypatch):
     record={'id':1,'question':'q','answer':'a','sources':[],'metadata':{'verification':{'status':'PASS'},'trace':{'retrieval_query':'PRIVATE_QUERY'}}}
-    monkeypatch.setattr(chat,'list_chat_records',lambda limit:[record])
+    monkeypatch.setattr(chat,'list_chat_records',lambda limit, **kwargs:[record])
     client=TestClient(app)
     monkeypatch.setattr(chat.config,'RETRIEVAL_DEBUG_ENABLED',False)
     assert 'PRIVATE_QUERY' not in client.get('/chat/history?include_debug=true').text

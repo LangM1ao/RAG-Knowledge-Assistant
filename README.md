@@ -1,480 +1,152 @@
-# RAG Knowledge Base Assistant
+# Production-aware Enterprise RAG Knowledge Base Assistant
 
-面向企业知识库场景的轻量级、可演示 RAG 智能问答系统。
+面向企业知识库的多用户 RAG 智能问答系统。在原有中英文检索、结构化分块、BM25、Hybrid/RRF、答案依据校验和引用能力上，增加账号认证、文档所有权和后端检索权限隔离。
 
+## 功能与技术栈
 
-## 项目背景
+- TXT/PDF 上传、结构优先字符分块、页码/offset、原文件保留、安全重建和回滚。
+- OpenAI Embedding、Chroma cosine、中文双字/英文标识符 BM25、Hybrid/RRF。
+- 查询规范化、显式实体别名、同文档同叶结构有界邻块；不硬编码姓名或问题答案。
+- 无依据拒答、实际引用定位、LLM 二次答案依据校验；诊断默认关闭。
+- FastAPI、Streamlit、SQLite、ChromaDB、OpenAI SDK、PyJWT、argon2-cffi、pytest、Docker Compose。
+- Argon2id 密码哈希、HS256 JWT、SQLite 会话撤销、登录失败限速、Admin/User。
+- Private/Shared 文档权限；Vector/BM25 同一授权集合；按用户隔离历史记录。
 
-企业内部通常有制度、FAQ、产品和流程文档。普通大模型不了解这些私有资料，也可能在没有依据时生成看似合理但错误的回答。本项目先检索知识库，再让大模型根据检索结果回答，并向用户展示引用来源。
+本机验收 Python 3.12，Docker 使用 Python 3.11。结果、失败修复与限制见 [最终报告](docs/RAG_FINAL_UPGRADE_REPORT.md) 和 [安全测试报告](docs/final_security_test_report.md)。历史评估指标不代表本次权限升级的性能。
 
-## 功能特性
+## 架构与流程
 
-- TXT / PDF 上传、解析、chunk 切分和向量入库
-- OpenAI Embedding 与 ChromaDB cosine 检索
-- 轻量 BM25 稀疏检索，支持中文双字 token 与英文错误码/配置名
-- Vector、BM25、Hybrid 三种检索模式与 RRF 排名融合
-- FastAPI 文档列表、详情、删除和重建接口
-- SQLite 文档 metadata 与问答历史持久化
-- RAG 回答、引用来源、chunk preview 和无依据提示
-- 默认启用 LLM 二次答案依据校验，结构化 PASS / FAIL 与安全异常处理
-- Streamlit 文档上传、管理、问答、引用和历史页面
-- 固定 26 题合成评估集、Hit Rate@K、Recall@K、MRR、拒答与延迟评估
-- chunk_size / overlap / top_k / cosine threshold 参数实验
-- 按 document_id 或 source_file 限定检索范围
-- 独立 eval Chroma 库，不污染演示知识库
-- `.env` 配置、基础异常处理、logging 和自动化测试
+    用户 → Streamlit → FastAPI → JWT签名/过期 + SQLite会话/账号状态
+         → SQLite文档权限 ∩ 用户选择范围
+         → Chroma where / 授权语料 BM25 → 原Hybrid/RRF
+         → 授权邻块与有界上下文 → LLM → 答案依据与引用校验
+         → 当前用户的答案、引用与历史
 
-## 技术栈
+上传时后端取认证用户 ID 写入 owner_id，默认 private，忽略前端伪造的 owner_id。检索时先查 SQLite，主动选择的 document_id 必须全部可访问，再将最终集合同时传给 Vector、BM25、别名和邻块扩展。空授权集合直接拒答，不访问 Embedding/LLM，不退回全库。无归属的孤立 Chroma 片段不会进入授权集合。
 
-- Python 3.13
-- FastAPI / Uvicorn
-- Streamlit / requests
-- SQLite
-- ChromaDB
-- OpenAI Embedding API / Chat API
-- pypdf / python-dotenv / pytest
+账号登录证明“你是谁”；文档权限决定“你能看什么”。仅隐藏按钮或让 LLM 自觉拒答，无法防止直接调用 API 或另一条检索分支泄露。
 
-## 系统架构
+## 角色与权限
 
-```text
-用户
-  ↓
-Streamlit 前端（展示与交互）
-  ↓ HTTP requests
-FastAPI 后端（接口与业务调度）
-  ├─ document_service
-  │    ├─ document_parser
-  │    ├─ chunker
-  │    └─ vector_store → ChromaDB
-  ├─ document_repository → SQLite documents
-  └─ rag_pipeline
-       ├─ retriever
-       │    ├─ vector_store → vector candidates
-       │    ├─ bm25_retriever → sparse candidates
-       │    └─ RRF → final top-k chunks
-       ├─ llm_client → draft answer
-       ├─ answer_verifier → PASS / FAIL / service error
-       └─ chat_repository → SQLite chat_history
-```
+| 操作 | Admin | User |
+| --- | --- | --- |
+| 上传文档 | 可以 | 可以，归属自己 |
+| 读取/检索自己的文档 | 可以 | 可以 |
+| 读取/检索其他人的私人文档 | 可以 | 不可以 |
+| 读取/检索共享文档 | 可以 | 可以 |
+| 删除、重建、修改别名 | 所有文档 | 仅自己的文档 |
+| 设置 private/shared | 可以 | 不可以 |
+| 创建、禁用、调整角色、重置密码 | 可以 | 不可以 |
 
-Streamlit 不直接操作 ChromaDB、SQLite 或 OpenAI。RAG 与数据访问逻辑保留在 FastAPI 后端。
+最后一个有效管理员不能禁用或降权。密码重置、账号状态/角色变更撤销旧会话。退出撤销当前会话；JWT 过期也会拒绝。受保护操作在锁内重新查询会话，防止排队期间撤权仍使用旧身份。
 
-## RAG 流程
+共享撤回后，相关历史不再展示；按当次可能使用的文档范围保守隐藏，可能隐藏没有实际引用该文档的回答。升级前缺少上下文范围的旧历史保留 SQLite，但不通过新界面公开。
 
-### 文档入库
+## 本地运行与管理员初始化
 
-```text
-文件上传 → 保存原文件 → 解析文本 → chunk
-  ├─ embedding → ChromaDB
-  └─ chunk text + metadata → 由 BM25 查询时从 ChromaDB 恢复
-→ SQLite 更新 indexed / chunk_count
-```
+1. 建立虚拟环境，安装 requirements.txt。
+2. 从 .env.example 复制 .env，设置 OPENAI_API_KEY。生成独立随机 JWT_SECRET_KEY：至少32随机字节的 URL-safe 编码，例如 Python secrets.token_urlsafe(48) 的输出；不要提交真实值。
+3. 首次执行初始化命令，在终端输入至少12字符密码。仅数据库没有账号时允许初始化；启动不覆盖管理员。
+4. 分别启动 API 和前端。
 
-### 用户查询
+    python -m venv .venv
+    # Windows: .venv\Scripts\activate
+    # Linux/macOS: source .venv/bin/activate
+    pip install -r requirements.txt
+    python -m app.bootstrap_admin --username admin
+    uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1
+    # 另一个终端
+    streamlit run frontend/streamlit_app.py --server.address=127.0.0.1
 
-```text
-question → Retriever
-  ├─ vector：query embedding → ChromaDB cosine
-  ├─ bm25：tokenize → BM25 score
-  └─ hybrid：两路候选 → RRF → 去重后的 final top-k
-→ context（无片段则直接拒答）→ LLM 生成答案
-→ Answer Verification → PASS 返回原答案与 sources / FAIL 拒答 / ERROR 服务提示
-→ SQLite history（只保存最终返回的答案）
-```
+打开 http://127.0.0.1:8501。管理员展开“用户管理”创建普通用户。没有公开注册或固定默认密码。初始化支持 --password-file；文件必须在受保护且 Git 忽略的目录，不能放进镜像。
 
-## Answer Verification（答案依据校验）
+## Docker
 
-生成答案后，第二次调用同一个配置的 LLM，检查答案是否得到**生成时同一份 context** 支持。资料相关不代表答案有依据，例如资料只说明“经理审批”，不能支持“报销上限 5000 元”。检索算法、距离阈值和 RRF 排序保持原样。
+    docker compose up -d --build --wait
+    docker compose exec backend python -m app.bootstrap_admin --username admin
+    docker compose ps
+    docker compose restart
+    docker compose up -d --wait
 
-- `PASS`：返回原答案，只保留实际引用编号对应的来源。
-- `FAIL`：替换为“根据当前知识库资料，无法确定该问题的答案。”，清空来源，不返回原答案。
-- API 失败、30 秒超时、模型拒绝校验、未知 verdict 或格式错误：返回“答案校验暂时不可用，请稍后重试。”，不把技术故障说成资料不足。
-- 检索无结果时直接沿用原拒答；生成结果是固定的纯拒答语时跳过校验。非固定措辞仍校验，避免一句拒答后夹带猜测绕过检查。
-- SDK 使用严格 JSON Schema，Pydantic 验证 `verdict` 和非空 `reason`，不靠查找 PASS 字样判断。
+- 常规 Compose 使用 rag-knowledge-assistant-data 命名卷，SQLite/Chroma/原文件在 /app/data。重建不删除卷；不要执行 down -v。
+- portable 使用 ./data 绑定目录：docker compose -f docker-compose.portable.yml up -d --build --wait。它与命名卷不是同一套数据库，不要混用。
+- 两服务只绑定主机 127.0.0.1，后端单 worker。公网需配置 HTTPS、可信代理与连接限流/超时；当前锁不能用于多 worker 或多副本。
+- 文件最大20 MiB；含 multipart 开销的请求最大21 MiB，流式实际字节也计数，未认证上传在读取正文前拒绝。
 
-`ANSWER_VERIFICATION_ENABLED` 默认 `true`，无需修改已有 `.env` 即可开启。设为 `false` 并重启后端可恢复原生成流程。Docker Compose 传递该变量；portable Compose 已通过 `env_file: .env` 传递。页面显示校验状态；既有 SQLite 表结构不变，历史保存最终答案与来源，不单独保存校验状态。
+## 配置
 
-每个需要校验的回答多一次 LLM 调用，增加 Token 消耗和响应时间；固定拒答不额外调用。二次模型判断仍可能误判，只能降低风险，不能保证完全消除幻觉。原有检索评估 CSV 不代表新校验功能的准确率；本次测试与手动验证见 [答案校验说明](docs/answer_verification.md)。
+| 配置 | 含义 |
+| --- | --- |
+| OPENAI_API_KEY | Embedding/LLM 凭据，只放本机 .env |
+| JWT_SECRET_KEY | 随机签名密钥，无可用默认值 |
+| JWT_ALGORITHM | 仅 HS256 |
+| ACCESS_TOKEN_EXPIRE_MINUTES | 默认60，允许1–1440 |
+| METADATA_DB_PATH / CHROMA_DB_DIR / UPLOAD_DIR | 数据位置 |
+| EMBEDDING_MODEL / LLM_MODEL | 沿用模型，不无故改变 Embedding |
+| CHUNK_SIZE / CHUNK_OVERLAP | 原分块参数 |
+| VECTOR_CANDIDATE_K / BM25_CANDIDATE_K / RRF_K | 原候选数与融合参数 |
+| ANSWER_VERIFICATION_ENABLED | 默认 true |
+| RETRIEVAL_DEBUG_ENABLED | 默认 false，还需请求 debug=true |
+| CONTEXT_MAX_CHARS / CONTEXT_MAX_CHUNKS | 上下文预算 |
 
-## Why Hybrid Retrieval
+similarity_threshold 保留历史名字，实际是最大 cosine distance，越小越相似。二次模型校验降低幻觉风险，不保证答案绝对正确。
 
-Vector Retrieval 擅长语义改写，例如“住宿费用限制”与“酒店限额”；BM25 擅长精确词项，例如 `ERR_CONNECTION_104`、`API_TIMEOUT_MS`、函数名和政策编号。两者的原始分数量纲不同，因此项目不直接相加，而使用 Reciprocal Rank Fusion：
+## 数据库与迁移
 
-```text
-RRF score = 1 / (RRF_K + rank)
-```
+- users：唯一id/username、password_hash、role、is_active、created_at、updated_at。
+- auth_sessions：随机jti、user_id、expires_at、revoked，不保存完整JWT。
+- login_attempts：哈希化用户名/IP bucket、失败次数、15分钟窗口；用户名5次/IP30次失败限速。
+- documents：保留原document_id，新增owner_id、visibility，默认private。
+- chat_history：新增user_id、document_ids_json记录可能使用的上下文范围。
+- entity_aliases：沿用原SQLite别名，不重建Chroma Metadata。
 
-同一个 chunk 同时被两路召回时，以稳定 `chunk_id` 去重，并累加两路 RRF 分数。`SIMILARITY_THRESHOLD` 只作用于 Vector 分支，不作用于 BM25 或 RRF。
-
-### 三种模式
-
-- `vector`：保持原有 ChromaDB cosine 检索，向后兼容的默认模式。
-- `bm25`：不调用 Embedding，直接从 ChromaDB 读取持久化 chunk 文本和 metadata，在内存构建轻量 BM25 索引。
-- `hybrid`：分别获取 Vector/BM25 候选，再用 RRF 融合并截取最终 Top-K。
-
-BM25 没有维护第二份 chunk 数据。上传、删除和 rebuild 改变 ChromaDB 后，下一次 BM25 查询重新读取当前 collection，因此自然同步；服务或容器重启后也能从持久化 ChromaDB 恢复。当前方案适合教学和小规模知识库；大规模环境应升级为增量倒排索引或独立搜索服务。
-
-### API 示例
-
-```json
-POST /chat/query
-{
-  "question": "ERR_CONNECTION_104 应该怎样排查？",
-  "retrieval_mode": "hybrid",
-  "top_k": 3,
-  "similarity_threshold": 0.6,
-  "document_ids": ["optional-document-id"]
-}
-```
-
-响应保留原有 `answer` 和 `sources`，并增加 `retrieval_mode` 与 `retrieval_debug`。调试字段可包含 `vector_score`、`vector_rank`、`bm25_score`、`bm25_rank` 和 `rrf_score`。
-
-### 配置项
-
-| 变量 | 默认值 | 作用 |
-|---|---:|---|
-| `DEFAULT_RETRIEVAL_MODE` | `vector` | 旧请求未传模式时的默认值 |
-| `VECTOR_CANDIDATE_K` | `8` | Hybrid 的 Vector 候选数 |
-| `BM25_CANDIDATE_K` | `8` | Hybrid 的 BM25 候选数 |
-| `RRF_K` | `60` | RRF 排名平滑常数 |
-| `BACKEND_PORT` | `8000` | Docker 宿主机后端端口 |
-| `FRONTEND_PORT` | `8501` | Docker 宿主机前端端口 |
-| `DATA_VOLUME_NAME` | `rag-knowledge-assistant-data` | Docker 持久卷名称 |
-
-Streamlit 查询区可选择 Vector、BM25 或 Hybrid，并在来源展开区查看两路排名和分数。
-
-## 项目结构
-
-```text
-rag_knowledge_assistant/
-  app/
-    main.py
-    api/
-      documents.py
-      chat.py
-    core/
-      config.py
-      logging_config.py
-    db/
-      database.py
-      document_repository.py
-      chat_repository.py
-    schemas/
-      document.py
-      chat.py
-    services/
-      document_parser.py
-      chunker.py
-      vector_store.py
-      document_service.py
-      rag_pipeline.py
-      answer_verifier.py
-      llm_client.py
-  frontend/
-    __init__.py
-    api_client.py
-    streamlit_app.py
-  data/
-    uploads/
-    chroma_db/
-    metadata.db
-  demo/
-    demo_knowledge_base.txt
-    company_reimbursement_policy.txt
-    product_ops_manual.txt
-  evals/
-    test_questions.json
-    retrieval_evaluator.py
-    run_eval.py
-    keyword_retriever.py
-    experiment_summary.csv
-    experiment_notes.md
-  docs/
-    screenshots/
-      week10-streamlit-home.png
-  examples/
-    manual_vector_store_demo.py
-  tests/
-    test_api.http
-    test_frontend_api_client.py
-    test_week10_backend.py
-    test_chat_repository.py
-    test_streamlit_app.py
-  requirements.txt
-  Dockerfile
-  Dockerfile.frontend
-  docker-compose.yml
-  .dockerignore
-  .env.example
-  README.md
-```
+事务内幂等加列；首位管理员初始化接管无owner历史文档并设private。不删除文档、不换ID、不重新Embedding。升级前备份SQLite、Chroma、上传文件；回滚时先停止服务，恢复同一时间点完整数据与代码，不覆盖运行中的数据库。
 
 ## API
 
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/health` | 服务健康检查 |
-| POST | `/documents/upload` | 上传、解析并入库文档 |
-| GET | `/documents/list` | 文档列表 |
-| GET | `/documents/{document_id}` | 文档详情 |
-| DELETE | `/documents/{document_id}` | 删除文件、metadata 和向量 |
-| POST | `/documents/{document_id}/rebuild` | 重建单个文档 |
-| POST | `/documents/rebuild-all` | 重建全部文档 |
-| POST | `/chat/query` | RAG 问答并保存历史 |
-| GET | `/chat/history?limit=10` | 最近问答历史 |
+除 /health、/auth/login 与 API 文档外，业务接口要求 Authorization: Bearer TOKEN。认证失败401，管理员操作权限不足403；不可访问与不存在的文档统一404；非法主动检索范围403。
 
-## 本地运行
+| 方法与路径 | 功能 |
+| --- | --- |
+| POST /auth/login | 用户名密码登录 |
+| GET /auth/me、POST /auth/logout | 当前用户、撤销会话 |
+| GET/POST /admin/users | 列出/创建账号 |
+| PATCH /admin/users/{id} | 状态与角色 |
+| POST /admin/users/{id}/reset-password | 重置并撤销旧会话 |
+| POST /documents/upload、GET /documents/list | 上传、授权列表 |
+| GET/DELETE /documents/{id} | 详情、删除 |
+| POST /documents/{id}/rebuild | 所有者或管理员重建 |
+| POST /documents/rebuild-all | 仅管理员，会调用Embedding |
+| GET/PUT/DELETE /documents/{id}/aliases | 读取、所有者或管理员修改 |
+| PATCH /documents/{id}/visibility | 管理员共享设置 |
+| POST /chat/query、GET /chat/history | 授权问答、本人且仍有权限的历史 |
 
-### 创建环境并安装依赖
+在 /docs 查看字段，Authorize 填令牌。Token 不放URL、日志或共享缓存。用户名大小写敏感。
 
-```powershell
-cd path\to\rag_knowledge_assistant
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
+## 测试与演示
 
-复制 `.env.example` 为 `.env`，填写自己的 API Key。不要提交 `.env`。
+    python -m pytest -q
+    python -m pytest tests/test_final_auth.py tests/test_final_permissions.py tests/test_final_retrieval.py tests/test_final_integration.py tests/test_final_frontend.py -q
 
-### 启动 FastAPI
+tests/conftest.py 强制临时SQLite/Chroma和假API key。保留原测试；API单元测试显式注入身份，安全测试实际登录并调用后端。真实临时Chroma用确定性向量与Mock LLM验证候选/引用隔离。
 
-```powershell
-python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
+演示：管理员创建Alice/Bob → 各自上传私文档 → Bob三模式查询Alice测试事实无泄露 → 管理员shared → Bob可问答不可删/重建 → 撤共享历史隐藏 → 重启检查账号文档权限。
 
-- Health：<http://127.0.0.1:8000/health>
-- Swagger：<http://127.0.0.1:8000/docs>
-
-### 启动 Streamlit
-
-另开一个 PowerShell：
-
-```powershell
-cd path\to\rag_knowledge_assistant
-.\.venv\Scripts\Activate.ps1
-python -m streamlit run frontend/streamlit_app.py
-```
-
-访问：<http://127.0.0.1:8501>
-
-### 使用 Docker Compose 启动
-
-先把 `.env.example` 复制为 `.env` 并填写自己的 `OPENAI_API_KEY`，然后执行：
-
-```powershell
-docker compose up -d --build
-docker compose ps
-```
-
-- Streamlit：<http://127.0.0.1:8501>
-- FastAPI Health：<http://127.0.0.1:8000/health>
-- Swagger：<http://127.0.0.1:8000/docs>
-
-停止服务但保留知识库数据：
-
-```powershell
-docker compose down
-```
-
-不要随意使用 `docker compose down -v`，`-v` 会同时删除 `rag-knowledge-assistant-data` 数据卷。
-
-## 使用流程
-
-1. 确认页面显示“后端连接正常”。
-2. 上传 TXT 或 PDF。
-3. 查看 document_id、status、chunk_count 和 vector_status。
-4. 输入问题并选择 top-k。
-5. 查看回答、响应时间和引用来源。
-6. 用文档外问题验证无依据提示。
-7. 在问答历史中查看 SQLite 持久化记录。
-
-## 演示文档与示例问题
-
-演示文件：`demo/demo_knowledge_base.txt`
-
-可使用以下问题验证检索、引用和拒答行为：
-
-1. 文档内直接问题：员工每周最多可以远程办公几天？
-2. 跨主题问题：差旅报销和学习预算分别有哪些时间或金额限制？
-3. 文档外问题：公司股票今天多少钱？
-4. 幻觉测试：请确认员工都可以报销商务舱费用。
-5. 引用测试：发生设备遗失时应该怎么做？请给出依据。
-
-## 示例返回
-
-```json
-{
-  "question": "员工每周最多可以远程办公几天？",
-  "answer": "根据员工服务手册，员工每周最多可以申请两天远程办公。",
-  "sources": [
-    {
-      "source_file": "demo_knowledge_base.txt",
-      "chunk_id": "...",
-      "distance": 0.12,
-      "chunk_preview": "员工每周最多可以申请两天远程办公……"
-    }
-  ]
-}
-```
-
-距离越小通常表示在当前 cosine distance 定义下越接近。不同指标的 score/distance 方向可能不同，不能脱离配置解释。
-
-## 无依据拒答
-
-当没有返回可靠 sources 时，Streamlit 明确显示：
-
-```text
-知识库中未找到可靠依据。
-```
-
-拒答行为由检索结果、相似度阈值和 prompt 约束共同控制，相关效果通过固定评估集进行验证。
-
-## 问答历史
-
-每次成功问答后，后端将 question、answer、sources 和 created_at 写入 SQLite `chat_history`。前端通过 `/chat/history` 获取最近十条，而不是只保存在浏览器 session。
-
-## 项目截图
-
-![Streamlit frontend](docs/screenshots/week10-streamlit-home.png)
-
-![Docker Compose runtime](docs/screenshots/week12-docker-home.png)
-
-## 测试
-
-```powershell
-python -m pytest -q -p no:cacheprovider
-```
-
-`tests/test_api.http` 用于 IDE 手动接口测试，不由 pytest 收集。`examples/manual_vector_store_demo.py` 是需要真实 API Key 的手动演示，不属于自动化测试。
-
-## 检索评估与优化
-
-评估实验数据与 collection 只写入 `data/eval_chroma_db/`，运行时知识库 `data/chroma_db/` 不参与参数实验。
-
-### 固定问题集
-
-`evals/test_questions.json` 包含 20 道题：8 道直接题、4 道跨 chunk 题、4 道文档外题、2 道易幻觉题和 2 道引用检查题。每题记录 expected_answer、expected_source 和 should_refuse。
-
-### 指标
-
-- hit rate：正确来源是否进入 top-k。
-- answer accuracy：最终答案是否覆盖人工金标准关键点。
-- refusal accuracy：文档外问题是否拒答，同时文档内问题是否避免误拒答。
-
-### 历史 Week11 真实结果摘要（20题，与本轮26题对比分开）
-
-baseline（500/50、top_k=3）：retrieval hit rate 1.00，20 题人工 answer accuracy 1.00，refusal accuracy 1.00。
-
-三组 chunk 参数的 hit rate 均为 1.00。当前题集没有区分出显著差异，因此不能声称某组 chunk 参数更优；暂时保留中间值 500/50。
-
-top_k=3、5、8 的 hit rate 都是 1.00，但平均返回 chunk 分别为 3、5、6。当前推荐 top_k=3，避免在命中没有提升时扩大 context 噪声。
-
-threshold probe 显示正确来源 distance 约为 0.256–0.549，文档外问题最小 distance 约为 0.761–0.954：
-
-| threshold | hit rate | refusal accuracy | 平均返回数 |
-|---:|---:|---:|---:|
-| 0.45 | 0.50 | 0.60 | 0.45 |
-| 0.60 | 1.00 | 1.00 | 1.90 |
-| 0.80 | 1.00 | 0.95 | 4.75 |
-
-当前固定集推荐 0.60。该数值依赖当前 embedding、cosine distance、文档和问题分布，更换条件后必须重新评估。
-
-完整结果见 `evals/experiment_summary.csv` 和 `evals/experiment_notes.md`。
-
-### 运行实验
-
-```powershell
-cd path\to\rag_knowledge_assistant
-.\.venv\Scripts\python.exe -m evals.run_eval baseline --with-answers
-.\.venv\Scripts\python.exe -m evals.run_eval chunk
-.\.venv\Scripts\python.exe -m evals.run_eval top-k
-.\.venv\Scripts\python.exe -m evals.run_eval threshold-probe
-.\.venv\Scripts\python.exe -m evals.run_eval threshold --thresholds 0.45 0.60 0.80
-.\.venv\Scripts\python.exe -m evals.run_eval filter
-.\.venv\Scripts\python.exe -m evals.run_retrieval_comparison
-```
-
-三模式逐题结果写入 `evals/retrieval_mode_comparison.csv`，分类汇总写入 `evals/retrieval_mode_summary.csv`。Vector/Hybrid 评估会调用当前配置的 Embedding API；只有在明确允许合成 demo 文档发送到该端点时运行。不要用私人上传文档做公开评估。
-
-### metadata filtering
-
-`POST /chat/query` 现在支持可选字段：
-
-```json
-{
-  "question": "报销提交时限是什么？",
-  "top_k": 3,
-  "similarity_threshold": 0.6,
-  "source_files": ["company_reimbursement_policy.txt"]
-}
-```
-
-也可以传入 `document_ids`。不传过滤字段时仍然全库检索。metadata filter 是范围约束，不等于权限系统。
-
-### Keyword、BM25、Vector 与 Rerank
-
-- `keyword_retriever.py` 是透明的字面匹配基线，不是 BM25。
-- BM25 进一步考虑词频、逆文档频率和文档长度，适合精确术语与编号。
-- vector search 更擅长语义改写和近义表达。
-- hybrid search 可以合并 keyword/BM25 与 vector 的候选。
-- rerank 位于初召回之后，对候选重新排序。
-
-本项目已实现 BM25、Hybrid/RRF；尚未接入外部 reranker。
+真实外部API合成验收脚本 evals/run_final_security_smoke.py 仅接受专用 rag-final-acceptance 容器，不对业务容器运行。原检索评估 evals/run_general_retrieval.py 继续使用隔离库；--with-answers产生模型费用，不以缓存延迟冒充性能提升。
 
 ## 已知限制
 
-- 只支持 TXT 和基础 PDF 文本解析，不支持复杂表格与版面理解。
-- 上传和 embedding 是同步流程，大文件会阻塞请求。
-- 没有登录、权限、多租户和审计系统。
-- 历史Week11基准26题/3份demo；本轮另有8份文档24题通用基准，均不是生产级评估体系。
-- answer accuracy 为单人逐题复核，没有多人标注一致性。
-- 已实现 BM25 与 Hybrid/RRF；未实现外部 rerank。
-- 依赖外部 Embedding 与 LLM API，受网络、配额和费用影响。
-- Streamlit 适合快速演示，不等同于复杂生产前端。
+- 单机SQLite、单worker；权限锁覆盖长问答，其他操作可能等待，不宣称高并发。
+- 模型拒答和校验可能误判；BM25跨语言词法召回有限，未加翻译/reranker/新框架。
+- 不支持OCR；原文件已缺失的旧本地副本无法重建，但已有向量保留。
+- 已展示/复制的内容不能被之后撤权收回；后续请求会重新鉴权。
+- 部署管理员须保护.env、数据库、备份和密码文件的OS访问权限。应用管理员拥有全库读取权。
+- 后续按需求补HTTPS、审计日志、并发架构；本次不做多租户、多部门、Redis、PostgreSQL或Agent。
 
-## Docker 容器化
+## 项目资料
 
-- 后端与前端分别使用 Dockerfile 构建，Compose 统一编排。
-- 本地默认 API 地址保持不变；容器通过 `API_BASE_URL=http://backend:8000` 通信。
-- backend 和 frontend 都配置了真实 HTTP 健康检查。
-- 使用 `rag-knowledge-assistant-data` 命名卷持久化 SQLite、ChromaDB 与上传文件。
-- 镜像构建、双服务健康检查、宿主机 HTTP、容器间通信、后端重启和浏览器页面渲染均已验证。
-- 架构说明见 `docs/architecture.md`。
+- [最终报告](docs/RAG_FINAL_UPGRADE_REPORT.md) · [安全报告](docs/final_security_test_report.md)
+- [权限架构](docs/final_auth_architecture.md) · [学习与面试总结](docs/RAG_FINAL_LEARNING_SUMMARY.md)
+- [原通用检索记录](docs/general_retrieval_upgrade_20261022.md) · [原答案校验](docs/answer_verification.md) · [历史变更](docs/change_history.md)
 
-
-## Retrieval Quality Upgrade（2026-10-22，上一阶段历史快照）
-
-使用结构优先字符分块、真实页码/offset、SQLite显式文档别名和实体Embedding上下文。原文仍保存原样，别名只确认身份。新增同文档同章节的有界邻块、部分回答、实际引用筛选、可恢复索引重建。
-
-- [本次挑战与解决过程](docs/retrieval_upgrade_20261022.md)
-- [零基础教程](docs/retrieval_upgrade_tutorial.md) / [完整代码与逐行导读](docs/retrieval_upgrade_code_walkthrough.md)
-- [前后对比与验收](eval_results/retrieval_upgrade_comparison.md) / [历史记录保存审计](docs/change_history.md)
-- 别名：GET/PUT/DELETE /documents/{document_id}/aliases。PUT示例结构为entity_name和aliases；在前端保存标准实体后重建文档。
-- 分数：distance、vector_distance和兼容vector_score均为cosine distance；vector_similarity=1-distance，不是百分比。
-- 诊断默认关闭。受信任开发时须RETRIEVAL_DEBUG_ENABLED=true并请求debug=true；折叠面板不是权限控制。
-- 重建：先备份原文/元数据/完整Embedding，再准备并验证新索引，异常恢复原索引。启动恢复journal，恢复失败阻止启动。当前使用单API worker，不能称为跨SQLite/Chroma的原子事务。
-- 已上传的真实简历已重建。其他旧文档点“重建文档”升级，保持原始文件与document_id，不清空Chroma。
-
-学习笔记同步到 [Notion检索升级复盘](https://app.notion.com/p/4018cdeeb95a81e98719ef6fbc89a92c)。
-
-
-## 通用检索机制升级（2026-10-22，当前实现）
-
-[完整总结与文件职责](docs/general_retrieval_upgrade_20261022.md) · [真实前后评估](eval_results/general_retrieval_comparison.md) · [零基础教程](docs/general_retrieval_tutorial.md) · [最终源码与逐行中文导读](docs/general_retrieval_code_walkthrough.md)
-
-- BM25只索引真实正文，登记身份/文件名不再作为虚假相关性；保留正文实体名、中文双字词和完整英文编号。query含技术编号时，候选须至少匹配一个明确编号。
-- 原问题、规范化问题、语义query与内容query分开；多个实体保留，歧义不猜；显式文档/来源范围不会被扩大或随意缩窄。登记别名不是自动翻译或权限系统。
-- Vector承担跨语言语义匹配；BM25没有有效词项时不投票。Hybrid仍按RRF有效排名融合，不无条件优先Vector。候选池8/路、TopK3、最大cosine距离0.60保持；距离越小越相似。
-- 通用结构层级与叶ID区分同名/相邻独立项目。邻块只扩同文档、同来源、同可靠叶ID；旧结构和无可靠标题时不扩展。正文、页码、字符偏移仍保留。
-- 保存或修改实体标准名后点“重建文档”，让向量带上新身份上下文；不降低阈值替代重建。先备份再安全重建，保持原文件和document_id。
-- 新历史metadata记录当时模式、TopK、最大距离、校验与结束阶段；旧历史不补造状态。GET /chat/history原参数兼容；include_debug=true只有配合服务端RETRIEVAL_DEBUG_ENABLED=true才读取已保存trace。新问答诊断仍要服务端开关与debug=true，默认关闭。
-- 答案校验没有放宽。检索为空、生成拒答、引用错误、校验失败分别记录。校验PASS不等于检索完整或所有请求已回答。
-- 151项自动化通过；8份24题三模式实测。Vector/Hybrid证据召回达到本套小语料100%，BM25来源命中指标下降原因和失败样本详见报告，不能解读为所有未知问题都完全解决。
-- 最终Docker真实合成验收27/27；保存实体后漏重建的初次失败报告也保留。生产现有已授权文档已重建24块，9条旧历史保持未知。当前可打开 http://127.0.0.1:8501 。
-
-复现检索：python -m evals.run_general_retrieval --stage after --run-id new_run；加--with-answers才运行选定真实答案。评估使用隔离SQLite/Chroma与非私人语料，会使用现有OpenAI API；run-id不可重复覆盖。缓存延迟不是生产性能。
-
-本轮不引入翻译/reranker/新框架；下一阶段可转向登录、权限和多用户知识库隔离。所有历史记录入口及备份范围见[保存审计](docs/change_history.md)。
-
-
-本轮Notion保存入口：[第22章：通用检索修复、复盘和完整代码](https://app.notion.com/p/4018cdeeb95a8144be31d5b3e0e51af9)。总结与四份代码附件，以及原Bad Case/排错/面试/总览入口已回读确认。
+密码实现参考 [argon2-cffi 官方文档](https://argon2-cffi.readthedocs.io/en/stable/api.html)。

@@ -11,10 +11,74 @@ st.set_page_config(
     layout="wide",
 )
 
-client = ApiClient()
+def clear_identity():
+    st.session_state.clear()
+
+def expired_session():
+    clear_identity()
+    st.rerun()
+
+client = ApiClient(token=st.session_state.get('access_token'), on_unauthorized=expired_session if st.session_state.get('access_token') else None)
 
 st.title("企业知识库 RAG 智能问答系统")
 st.caption("基于 FastAPI、ChromaDB、SQLite 与 Streamlit 的轻量级 RAG 产品演示")
+
+if not st.session_state.get('access_token'):
+    with st.form('login', clear_on_submit=True):
+        username = st.text_input('用户名')
+        password = st.text_input('密码', type='password')
+        submit = st.form_submit_button('登录')
+    if submit:
+        try:
+            result = client.login(username, password)
+            clear_identity()
+            st.session_state['access_token'] = result['access_token']
+            st.rerun()
+        except ApiClientError as exc:
+            st.error(str(exc))
+    st.stop()
+
+try:
+    user = client.me()
+except ApiClientError as exc:
+    st.error(str(exc))
+    st.stop()
+st.sidebar.write(f"当前用户：{user['username']}")
+st.sidebar.write('角色：管理员' if user['role'] == 'admin' else '角色：普通用户')
+if st.sidebar.button('退出登录'):
+    try:
+        client.logout()
+    except ApiClientError as exc:
+        st.error('未能确认服务端退出，请重试。')
+        st.stop()
+    clear_identity()
+    st.rerun()
+
+if user['role'] == 'admin':
+    with st.expander('用户管理'):
+        try:
+            users = client.auth_request('get', '/admin/users')['users']
+            st.dataframe(users)
+            with st.form('create-user', clear_on_submit=True):
+                new_name = st.text_input('新用户名')
+                new_password = st.text_input('初始密码（至少12位）', type='password')
+                new_role = st.selectbox('角色', ['user', 'admin'])
+                if st.form_submit_button('创建账号'):
+                    client.auth_request('post', '/admin/users', {'username': new_name, 'password': new_password, 'role': new_role})
+                    st.success('账号已创建。')
+            with st.form('manage-user', clear_on_submit=True):
+                target = st.selectbox('管理账号', users, format_func=lambda u: u['username'])
+                active = st.selectbox('账号状态', [True, False], format_func=lambda v: '启用' if v else '禁用')
+                role = st.selectbox('调整角色', ['user', 'admin'])
+                reset_password = st.text_input('重置密码（仅重置时填写）', type='password')
+                if st.form_submit_button('更新账号状态与角色'):
+                    client.auth_request('patch', f"/admin/users/{target['id']}", {'is_active': active, 'role': role})
+                    st.rerun()
+                if st.form_submit_button('重置密码'):
+                    client.auth_request('post', f"/admin/users/{target['id']}/reset-password", {'password': reset_password})
+                    st.success('密码已重置，旧会话已失效。')
+        except ApiClientError as exc:
+            st.error(str(exc))
 
 st.subheader("后端连接状态")
 health = client.check_health()
@@ -58,6 +122,14 @@ except ApiClientError as exc:
     documents = []
     st.error(str(exc))
 
+signature = tuple(sorted((d['document_id'], d.get('visibility'), d.get('owner_id')) for d in documents))
+if st.session_state.get('document_access_signature') != signature:
+    st.session_state.pop('last_answer', None)
+    for key in list(st.session_state):
+        if key.startswith(('aliases-', 'entity-name-', 'alias-values-')):
+            del st.session_state[key]
+st.session_state['document_access_signature'] = signature
+
 if not documents:
     st.info("知识库中还没有可展示的文档。")
 else:
@@ -74,9 +146,19 @@ else:
                     "vector_status": document.get("vector_status"),
                 }
             )
+            can_modify = user['role'] == 'admin' or document.get('owner_id') == user['id']
+            st.caption('共享' if document.get('visibility') == 'shared' else '私人')
+            if user['role'] == 'admin':
+                visibility = st.selectbox('可见性', ['private', 'shared'], index=1 if document.get('visibility') == 'shared' else 0, key=f'visibility-{document_id}')
+                if st.button('保存共享状态', key=f'share-{document_id}'):
+                    try:
+                        client.auth_request('patch', f'/documents/{document_id}/visibility', {'visibility': visibility})
+                        st.rerun()
+                    except ApiClientError as exc:
+                        st.error(str(exc))
             rebuild_column, delete_column = st.columns(2)
             with rebuild_column:
-                if st.button("重建文档", key=f"rebuild-{document_id}"):
+                if st.button("重建文档", key=f"rebuild-{document_id}", disabled=not can_modify):
                     try:
                         result = client.rebuild_document(document_id)
                         st.success(
@@ -86,7 +168,7 @@ else:
                     except ApiClientError as exc:
                         st.error(str(exc))
             with delete_column:
-                if st.button("删除文档", key=f"delete-{document_id}"):
+                if st.button("删除文档", key=f"delete-{document_id}", disabled=not can_modify):
                     try:
                         client.delete_document(document_id)
                         st.success("文档已删除。")
@@ -107,7 +189,7 @@ else:
                 if alias_state_key in st.session_state:
                     entity_name = st.text_input("实体名称", key=f"entity-name-{document_id}")
                     alias_text = st.text_area("别名（每行一个）", key=f"alias-values-{document_id}")
-                    if st.button("保存别名", key=f"save-aliases-{document_id}"):
+                    if st.button("保存别名", key=f"save-aliases-{document_id}", disabled=not can_modify):
                         try:
                             st.session_state[alias_state_key] = client.update_document_aliases(
                                 document_id, entity_name.strip(),
@@ -130,7 +212,7 @@ document_options = {
     for document in documents
     if document.get("document_id")
 }
-with st.expander("检索设置（高级）"):
+with st.expander("高级检索设置"):
     retrieval_mode_label = st.radio(
         "检索模式", options=["Vector", "BM25", "Hybrid"], horizontal=True,
         help="Vector 适合语义改写，BM25 适合精确名称和配置名，Hybrid 融合两路排名。",
@@ -140,7 +222,7 @@ with st.expander("检索设置（高级）"):
     selected_document_labels = st.multiselect(
         "限定文档范围",
         options=list(document_options),
-        help="不选择时默认检索整个知识库。",
+        help="不选择时检索当前账号有权访问的全部文档。",
     )
     use_threshold = st.toggle("启用相似度阈值", value=False)
     similarity_threshold = st.number_input(

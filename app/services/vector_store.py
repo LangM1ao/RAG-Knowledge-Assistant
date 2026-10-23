@@ -122,6 +122,9 @@ class VectorStore:
         # Historical similarity_threshold is a maximum cosine distance, not similarity.
         if similarity_threshold is not None and similarity_threshold < 0:
             raise ValueError('similarity_threshold cannot be negative')
+        if document_ids is not None and not any(document_ids):
+            self.last_query_debug = {'raw_candidate_count': 0, 'stop_reason': 'empty_scope'}
+            return []
         logger.info('Starting vector query: top_k=%s', top_k)
         embedding = query_embedding if query_embedding is not None else embed_text(question)
         query_kwargs = {'query_embeddings': [embedding], 'n_results': top_k}

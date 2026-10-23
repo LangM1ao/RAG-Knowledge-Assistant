@@ -1,5 +1,8 @@
+from app.services.auth_service import locked_access
 from copy import deepcopy
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
+from app.services.auth_service import current_user, ACCESS_LOCK
+from app.services.permissions import resolve_scope
 
 from app.core import config
 from app.core.logging_config import get_logger
@@ -13,7 +16,13 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 @router.post("/query")
-def query_knowledge_base(request: ChatQueryRequest):
+@locked_access
+def query_knowledge_base(request: ChatQueryRequest, user=Depends(current_user)):
+    with ACCESS_LOCK:
+        return _query_authorized(request, user)
+
+def _query_authorized(request, user):
+    scope = resolve_scope(user, request.document_ids, request.source_files)
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
 
@@ -23,7 +32,7 @@ def query_knowledge_base(request: ChatQueryRequest):
             retrieval_mode=request.retrieval_mode,
             top_k=request.top_k,
             similarity_threshold=request.similarity_threshold,
-            document_ids=request.document_ids,
+            document_ids=scope,
             source_files=request.source_files,
             debug=request.debug,
         )
@@ -39,6 +48,8 @@ def query_knowledge_base(request: ChatQueryRequest):
         answer=result["answer"],
         sources=result["sources"],
         metadata=metadata,
+        user_id=user["id"],
+        document_ids=scope,
     )
 
     response = {
@@ -62,8 +73,9 @@ def query_knowledge_base(request: ChatQueryRequest):
 
 
 @router.get("/history")
-def get_chat_history(limit: int = Query(default=10, ge=1, le=100), include_debug: bool = False):
-    rows = deepcopy(list_chat_records(limit=limit))
+@locked_access
+def get_chat_history(limit: int = Query(default=10, ge=1, le=100), include_debug: bool = False, user=Depends(current_user)):
+    rows = deepcopy(list_chat_records(limit=limit, user_id=user["id"], authorized_ids=resolve_scope(user)))
     if not (config.RETRIEVAL_DEBUG_ENABLED and include_debug):
         for row in rows:
             if row.get('metadata'):

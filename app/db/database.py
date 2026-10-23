@@ -44,4 +44,6 @@ def init_db():
         columns = {row[1] for row in connection.execute("PRAGMA table_info(chat_history)")}
         if "metadata_json" not in columns:
             connection.execute("ALTER TABLE chat_history ADD COLUMN metadata_json TEXT")
+        from app.services.auth_service import migrate
+        migrate(connection)
         connection.commit()

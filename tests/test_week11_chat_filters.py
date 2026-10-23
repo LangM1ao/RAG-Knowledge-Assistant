@@ -35,7 +35,7 @@ def test_chat_query_request_accepts_filters_and_validates_bounds():
         ChatQueryRequest(question="bad", retrieval_mode="unknown")
 
 
-def test_chat_route_forwards_retrieval_controls(monkeypatch):
+def test_chat_route_forwards_retrieval_controls(legacy_api_identity, monkeypatch):
     captured = {}
 
     def fake_answer_question(**kwargs):
@@ -69,7 +69,7 @@ def test_chat_route_forwards_retrieval_controls(monkeypatch):
     }
 
 
-def test_chat_route_returns_mode_and_retrieval_debug(monkeypatch):
+def test_chat_route_returns_mode_and_retrieval_debug(legacy_api_identity, monkeypatch):
     monkeypatch.setattr(chat.config, "RETRIEVAL_DEBUG_ENABLED", True)
     monkeypatch.setattr(
         chat,

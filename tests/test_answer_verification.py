@@ -1,3 +1,4 @@
+from pathlib import Path
 """答案校验的行为测试：仅替换检索和外部 LLM 请求，不访问真实 API。"""
 import json
 from types import SimpleNamespace
@@ -174,7 +175,7 @@ def test_disabled_verification_keeps_original_flow(scenario, monkeypatch):
     assert scenario["verification_calls"] == []
 
 
-def test_api_returns_only_verified_answer_and_saves_safe_history(scenario, monkeypatch):
+def test_api_returns_only_verified_answer_and_saves_safe_history(legacy_api_identity, scenario, monkeypatch):
     scenario["answer"] = "报销上限为 5000 元。"
     scenario["payload"] = {"verdict": "FAIL", "reason": "金额没有依据"}
     saved = []
@@ -236,6 +237,8 @@ def test_streamlit_displays_verification_and_service_error_correctly(monkeypatch
     from frontend import api_client
 
     class FakeClient:
+        def __init__(self, **kwargs): pass
+        def me(self): return {'id':1,'username':'fixture','role':'user'}
         def check_health(self):
             return SimpleNamespace(connected=True, message="OK", service="test")
 
@@ -246,7 +249,9 @@ def test_streamlit_displays_verification_and_service_error_correctly(monkeypatch
             return []
 
     monkeypatch.setattr(api_client, "ApiClient", FakeClient)
-    page = AppTest.from_file("frontend/streamlit_app.py")
+    page = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "frontend/streamlit_app.py"))
+    page.session_state["access_token"] = "test-token"
+    page.session_state["document_access_signature"] = ()
     page.session_state["last_answer"] = {
         "answer": "已检查的回答" if status == "PASS" else "安全提示",
         "sources": [{"source_file": "policy.txt", "chunk_preview": "经理审批", "distance": .1}]

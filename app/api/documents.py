@@ -1,8 +1,9 @@
+from app.services.auth_service import locked_access
 from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import Depends, APIRouter, File, HTTPException, UploadFile
 
 from app.core.config import UPLOAD_DIR
 from app.core.logging_config import get_logger
@@ -21,14 +22,25 @@ from app.services.document_service import (
 )
 
 
-router = APIRouter(prefix="/documents", tags=["documents"])
+from app.services.auth_service import current_user, admin_user, ACCESS_LOCK
+from app.services.permissions import require_document, accessible_documents
+from app.db.document_repository import update_document
+from pydantic import BaseModel
+from typing import Literal
+
+MAX_UPLOAD_BYTES = 20 * 1024 * 1024
+
+router = APIRouter(prefix="/documents", tags=["documents"], dependencies=[Depends(current_user)])
 logger = get_logger(__name__)
 
 
 @router.post("/upload", response_model=DocumentUploadResponse)
-async def upload_document(file: UploadFile = File(...)):
+@locked_access
+def upload_document(file: UploadFile = File(...), user=Depends(current_user)):
     document_id = str(uuid4())
-    filename = file.filename or "uploaded_file"
+    filename = (file.filename or "uploaded_file").replace("\\", "/").rsplit("/", 1)[-1]
+    if not filename or len(filename) > 200 or any(ord(c) < 32 for c in filename):
+        raise HTTPException(400, "Invalid filename.")
     suffix = Path(filename).suffix.lower()
 
     # 记录开始上传
@@ -51,9 +63,11 @@ async def upload_document(file: UploadFile = File(...)):
         )
 
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    saved_path = UPLOAD_DIR / f"{document_id}_{filename}"
+    saved_path = UPLOAD_DIR / f"{document_id}{suffix}"
 
-    content = await file.read()
+    content = file.file.read(MAX_UPLOAD_BYTES + 1)
+    if len(content) > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, "File exceeds 20 MiB limit.")
 
     if not content:
         logger.warning(
@@ -87,18 +101,20 @@ async def upload_document(file: UploadFile = File(...)):
 
     except Exception as exc:
         status = "failed"
-        message = str(exc)
-        error_message = str(exc)
+        message = "Document parsing failed."
+        error_message = "Document parsing failed."
 
         # 记录解析失败，并显示具体报错位置
-        logger.exception(
+        logger.warning(
             "Document parse failed: document_id=%s error=%s",
             document_id,
-            exc,
+            type(exc).__name__,
         )
 
     document_info = {
         "document_id": document_id,
+        "owner_id": user["id"],
+        "visibility": "private",
         "filename": filename,
         "file_path": str(saved_path),
         "file_type": suffix.replace(".", ""),
@@ -124,7 +140,7 @@ async def upload_document(file: UploadFile = File(...)):
             message = "Document uploaded, parsed, and indexed successfully."
         else:
             status = "failed"
-            message = index_result["message"]
+            message = "Indexing failed; the document was retained for retry."
 
     return DocumentUploadResponse(
         document_id=document_id,
@@ -135,14 +151,16 @@ async def upload_document(file: UploadFile = File(...)):
 
 
 @router.get("/list")
-def list_documents():
+@locked_access
+def list_documents(user=Depends(current_user)):
     return {
-        "documents": list_document_records()
+        "documents": [{k:v for k,v in d.items() if k not in {"file_path", "error_message"}} for d in accessible_documents(user)]
     }
 
 
 @router.post("/rebuild-all")
-def rebuild_all_documents_api():
+@locked_access
+def rebuild_all_documents_api(user=Depends(admin_user)):
     documents = list_document_records()
     results = []
 
@@ -168,8 +186,9 @@ def rebuild_all_documents_api():
 
 
 @router.get("/{document_id}", response_model=DocumentInfo)
-def get_document(document_id: str):
-    document = get_document_by_id(document_id)
+@locked_access
+def get_document(document_id: str, user=Depends(current_user)):
+    document = require_document(user, document_id)
 
     if document is None:
         logger.warning(
@@ -186,7 +205,9 @@ def get_document(document_id: str):
 
 
 @router.delete("/{document_id}")
-def delete_document_api(document_id: str):
+@locked_access
+def delete_document_api(document_id: str, user=Depends(current_user)):
+    require_document(user, document_id, modify=True)
     logger.info(
         "Deleting document: document_id=%s",
         document_id,
@@ -203,7 +224,7 @@ def delete_document_api(document_id: str):
 
         raise HTTPException(
             status_code=404,
-            detail=result["message"],
+            detail="Document operation failed.",
         )
 
     logger.info(
@@ -211,11 +232,13 @@ def delete_document_api(document_id: str):
         document_id,
     )
 
-    return result
+    return {k:v for k,v in result.items() if k != "backup_path"}
 
 
 @router.post("/{document_id}/rebuild")
-def rebuild_document_api(document_id: str):
+@locked_access
+def rebuild_document_api(document_id: str, user=Depends(current_user)):
+    require_document(user, document_id, modify=True)
     logger.info(
         "Rebuilding document: document_id=%s",
         document_id,
@@ -232,7 +255,7 @@ def rebuild_document_api(document_id: str):
 
         raise HTTPException(
             status_code=400,
-            detail=result["message"],
+            detail="Document operation failed.",
         )
 
     logger.info(
@@ -240,18 +263,22 @@ def rebuild_document_api(document_id: str):
         document_id,
     )
 
-    return result
+    return {k:v for k,v in result.items() if k != "backup_path"}
 
 
 @router.get("/{document_id}/aliases")
-def get_aliases(document_id: str):
+@locked_access
+def get_aliases(document_id: str, user=Depends(current_user)):
+    require_document(user, document_id)
     if get_document_by_id(document_id) is None:
         raise HTTPException(status_code=404, detail="Document not found.")
     return entity_aliases.get_document_aliases(document_id)
 
 
 @router.put("/{document_id}/aliases")
-def set_aliases(document_id: str, request: DocumentAliasesRequest):
+@locked_access
+def set_aliases(document_id: str, request: DocumentAliasesRequest, user=Depends(current_user)):
+    require_document(user, document_id, modify=True)
     if get_document_by_id(document_id) is None:
         raise HTTPException(status_code=404, detail="Document not found.")
     try:
@@ -261,8 +288,22 @@ def set_aliases(document_id: str, request: DocumentAliasesRequest):
 
 
 @router.delete("/{document_id}/aliases")
-def remove_aliases(document_id: str):
+@locked_access
+def remove_aliases(document_id: str, user=Depends(current_user)):
+    require_document(user, document_id, modify=True)
     if get_document_by_id(document_id) is None:
         raise HTTPException(status_code=404, detail="Document not found.")
     entity_aliases.delete_document_aliases(document_id)
     return {"success": True}
+
+
+class VisibilityUpdate(BaseModel):
+    visibility: Literal['private','shared']
+
+@router.patch('/{document_id}/visibility')
+@locked_access
+def set_visibility(document_id: str, request: VisibilityUpdate, user=Depends(admin_user)):
+    with ACCESS_LOCK:
+        require_document(user, document_id, modify=True)
+        update_document(document_id, {'visibility': request.visibility})
+    return {'document_id': document_id, 'visibility': request.visibility}

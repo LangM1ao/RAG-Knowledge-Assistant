@@ -1,8 +1,16 @@
+from pathlib import Path
 from streamlit.testing.v1 import AppTest
 
 
-def test_streamlit_page_contains_week10_product_sections():
-    app = AppTest.from_file("frontend/streamlit_app.py").run(timeout=10)
+def test_streamlit_page_contains_week10_product_sections(monkeypatch):
+    from frontend.api_client import ApiClient, HealthCheckResult
+    monkeypatch.setattr(ApiClient, 'me', lambda self: {'id':1,'username':'fixture','role':'user'})
+    monkeypatch.setattr(ApiClient, 'check_health', lambda self: HealthCheckResult(True,'ok','OK','test'))
+    monkeypatch.setattr(ApiClient, 'list_documents', lambda self: [])
+    monkeypatch.setattr(ApiClient, 'get_chat_history', lambda self, limit: [])
+    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "frontend/streamlit_app.py"))
+    app.session_state["access_token"] = "test-token"
+    app.run(timeout=10)
 
     assert app.title[0].value == "企业知识库 RAG 智能问答系统"
     assert "文档上传" in [item.value for item in app.subheader]

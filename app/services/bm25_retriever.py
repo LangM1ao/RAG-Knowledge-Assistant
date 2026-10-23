@@ -6,7 +6,7 @@ from collections import Counter
 from typing import Any
 
 from app.core.logging_config import get_logger
-from app.services.vector_store import VectorStore
+from app.services.vector_store import VectorStore, build_where_filter
 from app.services.query_normalizer import normalize_query
 
 
@@ -37,7 +37,7 @@ def _matches_filter(
     document_ids: list[str] | None,
     source_files: list[str] | None,
 ) -> bool:
-    if document_ids and metadata.get("document_id") not in document_ids:
+    if document_ids is not None and metadata.get("document_id") not in document_ids:
         return False
     if source_files and metadata.get("source_file") not in source_files:
         return False
@@ -63,7 +63,13 @@ class BM25Retriever:
         document_ids: list[str] | None = None,
         source_files: list[str] | None = None,
     ) -> list[dict]:
-        payload = self.collection.get(include=["documents", "metadatas"])
+        if document_ids is not None and not any(document_ids):
+            return []
+        options = {"include": ["documents", "metadatas"]}
+        where = build_where_filter(document_ids, source_files)
+        if where is not None:
+            options["where"] = where
+        payload = self.collection.get(**options)
         ids = payload.get("ids") or []
         documents = payload.get("documents") or []
         metadatas = payload.get("metadatas") or []

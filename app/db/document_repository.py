@@ -26,6 +26,11 @@ def init_db():
             )
             """
         )
+        columns = {row[1] for row in conn.execute('PRAGMA table_info(documents)')}
+        if 'owner_id' not in columns:
+            conn.execute('ALTER TABLE documents ADD COLUMN owner_id INTEGER')
+        if 'visibility' not in columns:
+            conn.execute("ALTER TABLE documents ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'")
         conn.commit()
 
 
@@ -44,9 +49,9 @@ def create_document(document_info: dict[str, Any]) -> None:
                 status,
                 chunk_count,
                 vector_status,
-                error_message
+                error_message, owner_id, visibility
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 document_info["document_id"],
@@ -58,6 +63,8 @@ def create_document(document_info: dict[str, Any]) -> None:
                 document_info["chunk_count"],
                 document_info["vector_status"],
                 document_info["error_message"],
+                document_info.get("owner_id"),
+                document_info.get("visibility", "private"),
             ),
         )
         conn.commit()

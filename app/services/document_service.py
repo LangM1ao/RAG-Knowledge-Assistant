@@ -107,7 +107,7 @@ def _rollback(directory: Path, journal: dict, store: VectorStore) -> None:
     restored = store.snapshot_document(journal['document_id'])
     if set(restored['ids']) != old_ids:
         raise RuntimeError('Index rollback verification failed; recovery journal retained.')
-    update_document(journal['document_id'], {key: value for key, value in document.items() if key != 'document_id'})
+    update_document(journal['document_id'], {key: value for key, value in document.items() if key not in {'document_id', 'owner_id', 'visibility'}})
     journal['state'] = 'rolled_back'
     _write_json(directory / 'journal.json', journal)
 

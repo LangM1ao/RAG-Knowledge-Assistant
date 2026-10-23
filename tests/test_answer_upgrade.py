@@ -1,3 +1,4 @@
+from pathlib import Path
 """Behavioral checks for partial answers, actual citations, and opt-in diagnostics."""
 import json
 from types import SimpleNamespace
@@ -178,7 +179,7 @@ def test_ordinary_logs_exclude_question_context_answer_and_verifier_reason(flow,
 
 
 @pytest.mark.parametrize("server, debug_requested", [(False, True), (True, False)])
-def test_api_does_not_leak_debug_even_if_service_returns_it(monkeypatch, server, debug_requested):
+def test_api_does_not_leak_debug_even_if_service_returns_it(legacy_api_identity, monkeypatch, server, debug_requested):
     monkeypatch.setattr(chat.config, "RETRIEVAL_DEBUG_ENABLED", server, raising=False)
     monkeypatch.setattr(chat, "answer_question", lambda **kwargs: {
         "answer": "safe", "sources": [], "debug_enabled": True,
@@ -191,7 +192,7 @@ def test_api_does_not_leak_debug_even_if_service_returns_it(monkeypatch, server,
     assert "RAW_CONTEXT" not in result.text and "RAW_QUERY" not in result.text
 
 
-def test_api_exception_does_not_echo_sensitive_provider_message(monkeypatch, caplog):
+def test_api_exception_does_not_echo_sensitive_provider_message(legacy_api_identity, monkeypatch, caplog):
     def fail(**kwargs):
         raise RuntimeError("SECRET_PROMPT_OR_KEY")
     monkeypatch.setattr(chat, "answer_question", fail)
@@ -221,10 +222,12 @@ def test_ui_diagnostics_default_off_and_aliases_load_only_when_requested(monkeyp
     from frontend import api_client
     calls = []
     class FakeClient:
+        def __init__(self, **kwargs): pass
+        def me(self): return {'id':1,'username':'fixture','role':'user'}
         def check_health(self):
             return SimpleNamespace(connected=True, message="OK", service="test")
         def list_documents(self):
-            return [{"document_id": "doc-a", "filename": "transcript.txt"}]
+            return [{"document_id": "doc-a", "filename": "transcript.txt", "owner_id": 1, "visibility": "private"}]
         def get_chat_history(self, limit):
             return []
         def get_document_aliases(self, document_id):
@@ -237,9 +240,11 @@ def test_ui_diagnostics_default_off_and_aliases_load_only_when_requested(monkeyp
             calls.append(("query", kwargs))
             return {"answer": "76 [2]", "sources": [{"citation_index": 2, "source_file": "transcript.txt", "chunk_id": "real-11", "vector_rank": 2}], "debug_enabled": False}
     monkeypatch.setattr(api_client, "ApiClient", FakeClient)
-    page = AppTest.from_file("frontend/streamlit_app.py").run(timeout=10)
+    page = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "frontend/streamlit_app.py"))
+    page.session_state["access_token"] = "test-token"
+    page.run(timeout=10)
     assert not page.exception and not calls
-    assert "检索设置（高级）" in [entry.label for entry in page.expander]
+    assert "高级检索设置" in [entry.label for entry in page.expander]
     assert not next(entry for entry in page.toggle if entry.label == "请求检索诊断").value
     next(entry for entry in page.text_area if entry.label == "请输入问题").set_value("成绩？")
     next(entry for entry in page.button if entry.label == "提交问题").click().run()

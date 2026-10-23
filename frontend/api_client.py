@@ -26,6 +26,8 @@ class ApiClient:
         post: Callable = requests.post,
         delete: Callable = requests.delete,
         put: Callable = requests.put,
+        token: str | None = None,
+        on_unauthorized: Callable | None = None,
     ):
         resolved_base_url = base_url or os.getenv(
             "API_BASE_URL",
@@ -33,13 +35,23 @@ class ApiClient:
         )
         self.base_url = resolved_base_url.rstrip("/")
         self.timeout = timeout
-        self.get = get
-        self.post = post
-        self.delete = delete
-        self.put = put
+        self.token = token
+        self.on_unauthorized = on_unauthorized
+        def authenticated(call):
+            def send(*args, **kwargs):
+                if self.token:
+                    kwargs['headers'] = {**kwargs.get('headers', {}), 'Authorization': 'Bearer ' + self.token}
+                return call(*args, **kwargs)
+            return send
+        self.get = authenticated(get)
+        self.post = authenticated(post)
+        self.delete = authenticated(delete)
+        self.put = authenticated(put)
+        self.patch = authenticated(requests.patch)
 
-    @staticmethod
-    def _response_json(response) -> dict:
+    def _response_json(self, response) -> dict:
+        if response.status_code == 401 and self.on_unauthorized:
+            self.on_unauthorized()
         try:
             payload = response.json()
         except ValueError as exc:
@@ -197,9 +209,9 @@ class ApiClient:
             payload["retrieval_mode"] = retrieval_mode
         if similarity_threshold is not None:
             payload["similarity_threshold"] = similarity_threshold
-        if document_ids:
+        if document_ids is not None:
             payload["document_ids"] = document_ids
-        if source_files:
+        if source_files is not None:
             payload["source_files"] = source_files
 
         try:
@@ -222,3 +234,23 @@ class ApiClient:
         except requests.RequestException as exc:
             self._raise_request_error(exc)
         return self._response_json(response).get("history", [])
+
+
+    def auth_request(self, method, path, payload=None):
+        try:
+            options = {'timeout': 15.0}
+            if payload is not None:
+                options['json'] = payload
+            response = getattr(self, method)(self.base_url + path, **options)
+        except requests.RequestException as exc:
+            self._raise_request_error(exc)
+        return self._response_json(response)
+
+    def login(self, username, password):
+        return self.auth_request('post', '/auth/login', {'username': username, 'password': password})
+
+    def me(self):
+        return self.auth_request('get', '/auth/me')
+
+    def logout(self):
+        return self.auth_request('post', '/auth/logout')

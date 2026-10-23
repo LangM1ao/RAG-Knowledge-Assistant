@@ -94,12 +94,15 @@ class Retriever:
             raise ValueError(f'Unsupported retrieval mode: {retrieval_mode}')
         if top_k < 1:
             raise ValueError('top_k must be positive')
+        if document_ids is not None and not any(document_ids):
+            self.last_debug = {'stop_reason': 'empty_scope', 'final_chunks': []}
+            return []
         # 注入记录用于独立测试；正式实例从持久 SQLite 读取，不猜测姓名。
         rows = self.alias_records
         if rows is None:
             rows = list_aliases(document_ids, source_files) if hasattr(self.vector_store, 'collection') else []
         rows = [row for row in rows
-                if (not document_ids or row['document_id'] in document_ids)
+                if (document_ids is None or row['document_id'] in document_ids)
                 and (not source_files or row.get('source_file') in source_files)]
         alias = resolve_aliases(question, rows)
         self.last_debug = {'normalized_query': normalize_query(question),
@@ -116,11 +119,11 @@ class Retriever:
             self.last_debug['stop_reason'] = 'empty_query'
             return []
         effective_ids = document_ids
-        if not document_ids and not source_files and alias['constraint_document_ids']:
-            effective_ids = alias['constraint_document_ids']
+        if not source_files and alias['constraint_document_ids']:
+            effective_ids = [d for d in alias['constraint_document_ids'] if document_ids is None or d in document_ids]
         self.last_debug['effective_filter'] = {'document_ids': effective_ids, 'source_files': source_files}
         common = {'question': alias['query']}
-        if effective_ids:
+        if effective_ids is not None:
             common['document_ids'] = effective_ids
         if source_files:
             common['source_files'] = source_files
@@ -159,7 +162,7 @@ class Retriever:
             return self._expand_context(question, chunks, document_ids, source_files)
 
     def _expand_context(self, question, chunks, document_ids, source_files):
-        selected = list(chunks)
+        selected = [c for c in chunks if document_ids is None or (c.get("metadata") or {}).get("document_id") in document_ids]
         self.last_debug['context_expansion'] = []
         # 只为明确的多事实问题补充邻块；普通单点问题保持原 Top-K。
         if not re.search(r'和|以及|并且|分别|同时|[，,；;]|\band\b', normalize_query(question)):
@@ -170,13 +173,13 @@ class Retriever:
         seen = {_identity(item) for item in selected}
         used = sum(len(item.get('text','')) for item in selected)
         cache = {}
-        for anchor in chunks:
+        for anchor in list(selected):
             meta = anchor.get('metadata') or {}
             doc, section, index = meta.get('document_id'), meta.get('section_title'), meta.get('chunk_index')
             structural = meta.get('structure_id')
             if not doc or not structural or meta.get('structure_version',0)<2 or not meta.get('structure_reliable') or not isinstance(index,int):
                 continue
-            if document_ids and doc not in document_ids:
+            if document_ids is not None and doc not in document_ids:
                 continue
             if source_files and meta.get('source_file') not in source_files:
                 continue

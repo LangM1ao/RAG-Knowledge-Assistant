@@ -1,10 +1,11 @@
+from test_final_auth import secured, headers
 from fastapi.testclient import TestClient
 
 from app.main import app
 from app.services import rag_pipeline
 
 
-def test_upload_indexes_document_before_returning(monkeypatch, tmp_path):
+def test_upload_indexes_document_before_returning(secured, monkeypatch, tmp_path):
     from app.api import documents
 
     captured = {}
@@ -20,6 +21,7 @@ def test_upload_indexes_document_before_returning(monkeypatch, tmp_path):
 
     response = TestClient(app).post(
         "/documents/upload",
+        headers=headers(secured[0], "alice"),
         files={"file": ("guide.txt", b"hello world", "text/plain")},
     )
 

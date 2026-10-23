@@ -19,7 +19,7 @@ def indexed_document(tmp_path, monkeypatch):
     path.write_text('# New section\n' + 'New content. ' * 12, encoding='utf-8')
     document = {'document_id': 'doc-1', 'filename': path.name, 'file_path': str(path),
                 'file_type': '.txt', 'upload_time': '2026-10-22T00:00:00',
-                'status': 'indexed', 'chunk_count': 1, 'vector_status': 'indexed', 'error_message': None}
+                'status': 'indexed', 'chunk_count': 1, 'vector_status': 'indexed', 'error_message': None, 'owner_id': None, 'visibility': 'private'}
     repository.create_document(document)
     store = vector_store.VectorStore(db_path=tmp_path / 'chroma')
     store.add_chunks([TextChunk('old', 'Original indexed text.', path.name, 0, 22)], document_id='doc-1')
@@ -217,3 +217,15 @@ def test_persisted_pdf_metadata_and_offsets_survive_snapshot(tmp_path, monkeypat
     assert metadata[1]['page_start'] == metadata[1]['page_end'] == 2
     assert metadata[1]['section_title'] == 'EDUCATION'
     assert metadata[1]['start_index'] == 18
+
+
+def test_rebuild_failure_does_not_restore_old_visibility(indexed_document, monkeypatch):
+    store, document, directory = indexed_document
+    add = store.add_prepared
+    def fail_after_permissions_change(prepared):
+        add(prepared)
+        repository.update_document('doc-1', {'visibility':'shared'})
+        raise RuntimeError('forced failure')
+    monkeypatch.setattr(store,'add_prepared',fail_after_permissions_change)
+    assert not document_service.rebuild_document_by_id('doc-1')['success']
+    assert repository.get_document('doc-1')['visibility']=='shared'

@@ -1,0 +1,95 @@
+{
+  "checks": [
+    {
+      "scenario": "unauthenticated API rejected",
+      "passed": true
+    },
+    {
+      "scenario": "upload indexed alice_private.txt",
+      "passed": true
+    },
+    {
+      "scenario": "upload indexed robot_manual.txt",
+      "passed": true
+    },
+    {
+      "scenario": "private document hidden",
+      "passed": true
+    },
+    {
+      "scenario": "private delete rejected",
+      "passed": true
+    },
+    {
+      "scenario": "private rebuild rejected",
+      "passed": true
+    },
+    {
+      "scenario": "forged document scope rejected",
+      "passed": true
+    },
+    {
+      "scenario": "vector private evidence excluded",
+      "passed": true
+    },
+    {
+      "scenario": "bm25 private evidence excluded",
+      "passed": true
+    },
+    {
+      "scenario": "hybrid private evidence excluded",
+      "passed": true
+    },
+    {
+      "scenario": "shared document readable",
+      "passed": true
+    },
+    {
+      "scenario": "shared document still cannot be deleted",
+      "passed": true
+    },
+    {
+      "scenario": "vector shared answer and citation",
+      "passed": false
+    },
+    {
+      "scenario": "bm25 shared answer and citation",
+      "passed": false
+    },
+    {
+      "scenario": "hybrid shared answer and citation",
+      "passed": true
+    },
+    {
+      "scenario": "Chinese question English document",
+      "passed": true
+    },
+    {
+      "scenario": "unsupported question refused",
+      "passed": true
+    },
+    {
+      "scenario": "revoked shared history hidden",
+      "passed": true
+    },
+    {
+      "scenario": "own rebuild",
+      "passed": true
+    },
+    {
+      "scenario": "restart preserves user document and permission",
+      "passed": true
+    },
+    {
+      "scenario": "own document delete",
+      "passed": true
+    },
+    {
+      "scenario": "logout revokes session",
+      "passed": true
+    }
+  ],
+  "passed": 20,
+  "total": 22,
+  "scope": "Disposable container and synthetic fixtures; real OpenAI embedding/generation/verification."
+}
