@@ -34,7 +34,7 @@ def main():
         call('POST','/admin/users',admin,json={'username':name,'password':password,'role':'user'}).raise_for_status()
     alice,bob=login('alice'),login('bob')
     check('unauthenticated API rejected',call('GET','/documents/list').status_code==401)
-    fixtures=[('alice_private.txt',b'Internal authorization policy. The confidential authorization code is ZEBRA_5839. Never share this code outside the authorized team.',alice),
+    fixtures=[('alice_private.txt',b'Synthetic project facts. The project codename is ZEBRA_5839. This fictional project label is used for retrieval acceptance testing.',alice),
               ('robot_manual.txt',b'Robot maintenance procedure. Before maintenance, isolate the main power supply and lock the power switch. Press the green button to start the motor after maintenance.',bob)]
     ids=[]
     for name,body,token in fixtures:
@@ -46,13 +46,13 @@ def main():
     check('private rebuild rejected',call('POST','/documents/'+private_id+'/rebuild',bob).status_code==404)
     check('forged document scope rejected',call('POST','/chat/query',bob,json={'question':'code','document_ids':[private_id]}).status_code==403)
     for mode in ['vector','bm25','hybrid']:
-        r=call('POST','/chat/query',bob,json={'question':'What is the confidential authorization code?','retrieval_mode':mode});r.raise_for_status()
+        r=call('POST','/chat/query',bob,json={'question':'What is the project codename?','retrieval_mode':mode});r.raise_for_status()
         check(mode+' private evidence excluded','ZEBRA_5839' not in r.text and 'alice_private.txt' not in r.text and private_id not in r.text)
     call('PATCH','/documents/'+private_id+'/visibility',admin,json={'visibility':'shared'}).raise_for_status()
     check('shared document readable',call('GET','/documents/'+private_id,bob).status_code==200)
     check('shared document still cannot be deleted',call('DELETE','/documents/'+private_id,bob).status_code==404)
     for mode in ['vector','bm25','hybrid']:
-        r=call('POST','/chat/query',bob,json={'question':'What is the confidential authorization code?','retrieval_mode':mode,'document_ids':[private_id]});r.raise_for_status()
+        r=call('POST','/chat/query',bob,json={'question':'What is the project codename?','retrieval_mode':mode,'document_ids':[private_id]});r.raise_for_status()
         data=r.json();check(mode+' shared answer and citation','ZEBRA_5839' in data['answer'] and any(s['document_id']==private_id for s in data['sources']))
     r=call('POST','/chat/query',bob,json={'question':'维护机器人之前应该如何处理主电源？','retrieval_mode':'hybrid','document_ids':[robot_id]});r.raise_for_status()
     data=r.json();check('Chinese question English document',bool(data['sources']) and data['verification']['status']=='PASS' and any(w in data['answer'] for w in ['切断','断开','隔离']))

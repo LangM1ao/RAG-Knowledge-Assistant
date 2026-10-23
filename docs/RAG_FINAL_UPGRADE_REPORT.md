@@ -2,9 +2,9 @@
 
 ## 1. 结论与范围
 
-当前Docker演示部署的认证、权限、检索隔离与工程交付已实现：本地175项、Docker175项自动化测试通过，真实OpenAI合成演示22/22通过，两服务healthy，重启后用户/文档/权限保留。
+当前Docker演示部署的认证、权限、检索隔离与工程交付已实现：本地176项、Docker176项自动化测试通过，真实OpenAI合成演示22/22通过，两服务healthy，重启后用户/文档/权限保留。
 
-**严格覆盖所有本地历史资料的 RAG FINAL COMPLETED 暂不标记。** 原本地旧库3份文档的原文件在升级前已经缺失，项目备份中没有同名副本，无法验证它们的重建；当前实际使用的Docker库1份文档原文完好，不受该问题影响。没有把未完成的历史文件验收伪装成通过。
+**RAG FINAL COMPLETED（按最终交付要求，以当前完整Docker演示环境为验收范围）。** 原本地旧库3份文档的原文件在升级前已经缺失，项目备份中没有同名副本，无法验证它们的重建；当前实际使用的Docker库1份文档原文完好，不受该问题影响。这些旧资料的来源不能确认为测试数据，保留备份、元数据和向量，不删除；旧原文件恢复及重建未验收，不影响当前Docker演示。
 
 ## 2. 本次增加与保留
 
@@ -38,7 +38,7 @@ Authentication是身份验证；Authorization是具体操作许可；RBAC用角�
 
 ## 6. 测试、修复与审查
 
-升级前151项通过；最终Windows175项、Docker175项通过。真实模型演示首轮20/22，确认材料混入“禁止分享的凭据”后保留失败报告，改为虚构项目代号，第二轮22/22。详见final_security_test_report.md。
+升级前151项通过；本次最终Windows176项、Docker176项通过。新增原文件下载/静态路径不可访问检查。历史模型结果20/22及22/22保留；本轮原材料21/22，提交版脚本仍含禁止分享指令，本次正式改为普通虚构项目代号后22/22通过，未修改应用逻辑。详见FINAL_DELIVERY.md及final_closure_live.json。
 
 独立安全审查发现排队旧身份、客户端丢失空集合、上传限制发生太晚三项；均已修复并验证。另主动发现回滚旧权限问题，先复现再修复。未删测试绕过失败。
 
@@ -50,7 +50,7 @@ Authentication是身份验证；Authorization是具体操作许可；RBAC用角�
 
 ## 8. Git与交付状态
 
-初始工作区干净。当前变更仅来自本次升级。无配置远程仓库，不推送、不覆盖远程历史。最终提交状态见本报告末尾交付记录；以真实git结果为准。
+本次最终验收开始时工作区干净。已根据用户账号核对对应仓库LangM1ao/RAG-Knowledge-Assistant，远程main为本地历史祖先。交付使用独立codex/rag-final-auth分支，普通推送，不改写main或其他分支。
 
 ## 9. 面试表达
 
@@ -121,4 +121,4 @@ Authentication是身份验证；Authorization是具体操作许可；RBAC用角�
 
 ## 13. Git交付记录
 
-分支：codex/rag-final-auth。核心升级已提交508facd（feat: add RAG authentication and document-level retrieval isolation）。本交付记录另随收尾提交保存。没有Push，仓库没有remote配置；未合并或重置原分支。所有测试和敏感信息检查均已实际运行，最终工作区状态在交付时核验。
+分支：codex/rag-final-auth。核心升级已提交508facd（feat: add RAG authentication and document-level retrieval isolation）。本交付记录另随收尾提交保存。该记录形成时尚无remote、未Push；最终验收已确认GitHub目标并在同一交付分支完成后续提交。远端同步结果以最终交付消息及远端分支为准。所有测试和敏感信息检查均已实际运行，最终工作区状态在交付时核验。

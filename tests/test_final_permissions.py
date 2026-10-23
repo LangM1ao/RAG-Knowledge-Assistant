@@ -85,3 +85,18 @@ def test_unauthenticated_upload_does_not_consume_body(secured):
         yield b'--x\r\nContent-Disposition: form-data; name="file"; filename="a.txt"\r\n\r\nprivate\r\n--x--\r\n'
     assert c.post('/documents/upload',headers={'Content-Type':'multipart/form-data; boundary=x'},content=body()).status_code==401
     assert consumed==[]
+
+
+def test_private_original_has_no_download_or_static_route(secured, tmp_path):
+    c, u = secured
+    seed(u['alice']['id'])
+    original = tmp_path / 'private-original.txt'
+    original.write_text('PRIVATE_ORIGINAL_SENTINEL', encoding='utf8')
+    with database.get_connection() as connection:
+        connection.execute("UPDATE documents SET file_path=? WHERE document_id='a'", (str(original),))
+    for identity in [None, 'bob']:
+        auth = headers(c, identity) if identity else {}
+        for path in ['/documents/a/download', '/uploads/private-original.txt', '/data/uploads/private-original.txt', '/static/private-original.txt']:
+            response = c.get(path, headers=auth)
+            assert response.status_code in {401, 404}
+            assert 'PRIVATE_ORIGINAL_SENTINEL' not in response.text
