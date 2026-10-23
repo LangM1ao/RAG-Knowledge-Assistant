@@ -118,3 +118,7 @@ Authentication是身份验证；Authorization是具体操作许可；RBAC用角�
 ## 12. Notion与敏感检查
 
 独立私人总结页已创建并回读确认：https://app.notion.com/p/4028cdeeb95a81428384fd45b7b26b2c 。未覆盖旧学习页。159个候选Git文件扫描无真实API/JWT/admin密码匹配，无运行数据库/备份路径；git diff --check通过。专用临时验收容器已移除，正式两服务保持healthy。
+
+## 13. Git交付记录
+
+分支：codex/rag-final-auth。核心升级已提交508facd（feat: add RAG authentication and document-level retrieval isolation）。本交付记录另随收尾提交保存。没有Push，仓库没有remote配置；未合并或重置原分支。所有测试和敏感信息检查均已实际运行，最终工作区状态在交付时核验。

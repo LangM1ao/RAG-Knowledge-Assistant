@@ -81,4 +81,3 @@ def test_queued_identity_is_revalidated_after_revocation(secured):
     with pytest.raises(HTTPException) as error:
         query_knowledge_base(ChatQueryRequest(question='private'),user=stale)
     assert error.value.status_code==401
-
